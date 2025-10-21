@@ -16,7 +16,7 @@ const ProductList = [
     oldPrice: 60,
     onSale: true,
     NewArrival: false,
-    category: "Womens",
+    category: ["Womens","Kids"],
     image: sweaterImage,
   },
   {
@@ -46,7 +46,7 @@ const ProductList = [
     oldPrice: 90,
     onSale: false,
     NewArrival: true,
-    category: "Womens",
+    category: ["Womens","Kids"],
     image: dressImage,
   },
   {
@@ -66,7 +66,7 @@ const ProductList = [
     oldPrice: 60,
     onSale: false,
     NewArrival: true,
-    category: "Womens",
+    category: ["Womens","Kids"],
     image: skirtImage,
   },
   {
@@ -75,7 +75,7 @@ const ProductList = [
     price: 65,
     oldPrice: 80,
     onSale: true,
-    NewArrival: true,
+    NewArrival: false,
     category: "Unisex",
     image: hoodieImage,
   },
