@@ -4,7 +4,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { GoHeartFill } from "react-icons/go";
 import { HiShoppingBag } from "react-icons/hi2";
 
-const Navbar = ({ handleScrollToProducts, setSearchQuery }) => {
+const Navbar = ({ handleScrollToProducts, setSearchQuery, handlePanel }) => {
   
   return (
     <div>
@@ -47,13 +47,21 @@ const Navbar = ({ handleScrollToProducts, setSearchQuery }) => {
               </div>
 
               {/* Icons */}
-              <button className="flex text-2xl text-zinc-800 ">
-                <GoHeartFill className="" />
-                <span className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]">
+              <button className="flex text-2xl text-zinc-800 cursor-pointer">
+
+                {/* heart icon */}
+                <GoHeartFill onClick={()=>
+                  handlePanel('wishlist')
+                }/>
+                <span className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]" onClick={()=>handlePanel('wishlist')}>
                   1
                 </span>
-                <HiShoppingBag />
-                <span className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]">
+
+                {/* shopping bag icon */}
+                <HiShoppingBag onClick={()=>
+                  handlePanel('cart')
+                }/>
+                <span className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]" onClick={()=>handlePanel('cart')}>
                   1
                 </span>
               </button>
