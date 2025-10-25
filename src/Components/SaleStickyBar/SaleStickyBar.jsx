@@ -40,7 +40,7 @@ const SaleStickyBar = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg font-primarylw sticky top-22 z-50">
+    <section className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg font-primarylw sticky top-23 z-50">
       <div className="relative px-6 py-3 sm:py-4 lg:py-5">
         <div className="flex items-center justify-between pr-10">
           {/* Offer Text */}

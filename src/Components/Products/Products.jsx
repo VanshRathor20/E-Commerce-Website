@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import ProductList from "../Products/ProductList";
 import { GoHeartFill } from "react-icons/go";
 
-
-const Products = ({searchQuery}) => {
+const Products = ({ searchQuery, AddToCart }) => {
   const categories = [
     "All",
     "Mens",
@@ -26,9 +25,10 @@ const Products = ({searchQuery}) => {
       (Array.isArray(i.category) && i.category.includes(activeTab)) ||
       (typeof i.category === "string" && i.category === activeTab);
 
-
-  const matchesSearch=i.name.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase());
-  return matchesCategory && matchesSearch;
+    const matchesSearch = i.name
+      .toLocaleLowerCase()
+      .includes(searchQuery.toLocaleLowerCase());
+    return matchesCategory && matchesSearch;
   });
 
   const renderProducts = () => {
@@ -75,7 +75,11 @@ const Products = ({searchQuery}) => {
               </span>
             )}
           </div>
-          <button className="w-full mt-3 bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
+
+          <button
+            className="w-full mt-3 bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-full hover:bg-blue-700 transition-colors"
+            onClick={() => AddToCart(i)}
+          >
             Add to Cart
           </button>
         </div>
@@ -84,7 +88,10 @@ const Products = ({searchQuery}) => {
   };
 
   return (
-    <section id="products-section" className=" w-full mx-auto my-20 p-5">
+    <section
+      id="products-section"
+      className=" w-full mx-auto my-20 p-5 sm:mt-80"
+    >
       {/* Category Tabs */}
       <div className="flex flex-wrap gap-x-6 gap-y-3 items-center justify-center mb-10">
         {categories.map((category) => (
@@ -104,13 +111,14 @@ const Products = ({searchQuery}) => {
       </div>
 
       {/* Product Listing */}
-      <div className="flex flex-wrap gap-6 justify-center mt-25">
-        {
-          filterItems.length===0?
-          <p className="text-lg font-semibold text-zinnc-800">No products found</p>
-          : 
+      <div className="flex flex-wrap gap-6 justify-center mt-10">
+        {filterItems.length === 0 ? (
+          <p className="text-lg font-semibold text-zinc-800">
+            No products found
+          </p>
+        ) : (
           renderProducts()
-        }
+        )}
       </div>
     </section>
   );

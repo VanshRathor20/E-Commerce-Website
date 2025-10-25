@@ -79,6 +79,7 @@ const ProductList = [
     category: "Unisex",
     image: hoodieImage,
   },
+  
 ];
 
 export default ProductList;
