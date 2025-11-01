@@ -1,6 +1,6 @@
 import React from "react";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
-const Cart = ({ activePanel, closePanel, cart, setCart }) => {
+const Cart = ({ activePanel, closePanel, cart, setCart,setOrderSummary }) => {
   return (
     <div
       className={`scroll flex flex-col justify-between gap-5 bg-zinc-100 fixed top-0 right-0 bottom-0 left-auto z-50 w-[400px] border border-zinc-300 py-7 transform transition-transform duration-300 ${
@@ -150,7 +150,7 @@ const Cart = ({ activePanel, closePanel, cart, setCart }) => {
               ? "bg-gray-400 cursor-not-allowed pointer-events-none"
               : "bg-blue-600 cursor-pointer active:bg-blue-700 "
           }`}
-          disabled={cart.length === 0}
+          disabled={cart.length === 0} onClick={()=>setOrderSummary(true)}
         >
           Checkout
         </button>

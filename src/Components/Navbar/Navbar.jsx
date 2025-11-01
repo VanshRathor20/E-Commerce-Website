@@ -72,7 +72,7 @@ const Navbar = ({
                 {/* heart icon */}
                 <GoHeartFill onClick={() => handlePanel("wishlist")} />
                 <span
-                  className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]"
+                  className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-sm font-bold border-white border-2 ml-[-7px]"
                   onClick={() => handlePanel("wishlist")}
                 >
                   0
@@ -82,7 +82,7 @@ const Navbar = ({
                 <HiShoppingBag onClick={() => handlePanel("cart")} />
                 {
                     totalItem>0 && <span
-                    className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-xl border-white border-2 ml-[-7px]"
+                    className="bg-red-600 rounded-full w-5 h-5 text-white font-bold flex justify-center items-center text-sm border-white border-2 ml-[-7px]"
                     onClick={() => handlePanel("cart")}
                   >
                     {totalItem}

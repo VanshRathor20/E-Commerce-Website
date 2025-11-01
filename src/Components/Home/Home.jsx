@@ -6,12 +6,16 @@ import Cart from "../Cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import SaleStickyBar from "../SaleStickyBar/SaleStickyBar";
 import { HiArrowUp } from "react-icons/hi";
+import OrderSummary from "../OrderSummary/OrderSummary";
+import OrderPlace from "../OrderPlace/OrderPlace";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activePanel, setActivePanel] = useState("null");
+  // track whether the order summary modal is visible
+  const [orderSummary, setOrderSummary] = useState(false);
   const [cart, setCart] = useState([]);
 
   // Scroll detection for Back to Top button
@@ -85,6 +89,11 @@ const Home = () => {
   // total item badhe in navbar
   const totalItem = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <div>
       {/* Navbar */}
@@ -110,10 +119,25 @@ const Home = () => {
         closePanel={closePanel}
         cart={cart}
         setCart={setCart}
+        setOrderSummary={setOrderSummary}
       />
 
       {/* Wishlist */}
       <Wishlist activePanel={activePanel} closePanel={closePanel} />
+
+      {/* Order Summary */}
+      {orderSummary && (
+        <OrderSummary
+          cart={cart}
+          subtotal={subtotal}
+          shippingFee={50}
+          orderTotal={subtotal + 50}
+          closePanel={() => setOrderSummary(false)}
+        />
+      )}
+
+      {/* Orderd Placed */}
+      <OrderPlace/>
 
       {/* Back to Top Button */}
       <button
