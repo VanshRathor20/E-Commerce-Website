@@ -17,6 +17,8 @@ const Home = () => {
   // track whether the order summary modal is visible
   const [orderSummary, setOrderSummary] = useState(false);
   const [cart, setCart] = useState([]);
+  // show OrderPlace (payment) view after clicking Place Order
+  const [showOrderPlace, setShowOrderPlace] = useState(false);
 
   // Scroll detection for Back to Top button
   useEffect(() => {
@@ -133,11 +135,27 @@ const Home = () => {
           shippingFee={50}
           orderTotal={subtotal + 50}
           closePanel={() => setOrderSummary(false)}
+          onPlaceOrder={() => {
+             setShowOrderPlace(true);  
+              setOrderSummary(false);
+            }}
+            
         />
       )}
+      {showOrderPlace && (
+        <OrderPlace
+          subtotal={subtotal + 50}
+          onClose={() => setShowOrderPlace(false)}
+          onPaymentSuccess={() => {
+            // clear cart and hide payment UI after successful payment
+            setCart([]);
+            setShowOrderPlace(false);
+            alert("Order placed successfully!");
+          }}
+        />
+      )}
+  {/* Order Placement (payment) - shown after clicking Place Order */}
 
-      {/* Orderd Placed */}
-      <OrderPlace/>
 
       {/* Back to Top Button */}
       <button
