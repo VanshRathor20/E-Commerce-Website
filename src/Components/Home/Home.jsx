@@ -19,6 +19,7 @@ const Home = () => {
   const [cart, setCart] = useState([]);
   // show OrderPlace (payment) view after clicking Place Order
   const [showOrderPlace, setShowOrderPlace] = useState(false);
+  const [wishlist,setWishlist]=useState([]);
 
   // Scroll detection for Back to Top button
   useEffect(() => {
