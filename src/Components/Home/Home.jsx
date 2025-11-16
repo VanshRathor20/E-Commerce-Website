@@ -10,6 +10,14 @@ import OrderSummary from "../OrderSummary/OrderSummary";
 import OrderPlace from "../OrderPlace/OrderPlace";
 
 const Home = () => {
+  // safe JSON parse helper: returns `fallback` when value is null/invalid
+  const safeParse = (value, fallback = []) => {
+    try {
+      return value ? JSON.parse(value) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -22,9 +30,14 @@ const Home = () => {
     const savestCartObj=savestCart ? JSON.parse(savestCart):[];
     return savestCartObj;
   });
+
   // show OrderPlace (payment) view after clicking Place Order
   const [showOrderPlace, setShowOrderPlace] = useState(false);
-  const [wishlist, setWishlist] = useState([]);
+
+  const [wishlist, setWishlist] = useState(() => {
+    const savedWishlist = localStorage.getItem("wishlist");
+    return safeParse(savedWishlist);
+  });
 
   // Scroll detection for Back to Top button
   useEffect(() => {
@@ -54,6 +67,11 @@ const Home = () => {
   useEffect(()=>{
     localStorage.setItem('cart',JSON.stringify(cart));
   },[cart]);
+
+  //save wishlist items to local storage
+  useEffect(()=>{
+    localStorage.setItem('wishlist',JSON.stringify(wishlist));
+  },[wishlist]);
 
   // Back to top function
   const scrollToTop = () => {
