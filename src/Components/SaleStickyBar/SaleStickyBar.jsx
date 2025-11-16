@@ -45,7 +45,7 @@ const SaleStickyBar = () => {
         <div className="flex items-center justify-between pr-10">
           {/* Offer Text */}
           <p className="text-xs font-medium text-white sm:text-sm lg:text-base">
-            Save 50%! on every purchase, Offer ends in
+            Save 70%! on every purchase, Offer ends in
           </p>
 
           {/* Countdown Timer */}
