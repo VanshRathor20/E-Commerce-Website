@@ -10,7 +10,7 @@ const Navbar = ({
   setSearchQuery,
   handlePanel,
   totalItem,
-  wishItem
+  wishlist = []
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -72,13 +72,14 @@ const Navbar = ({
               <button className="flex text-2xl text-zinc-800 cursor-pointer">
                 {/* heart icon */}
                 <GoHeartFill onClick={() => handlePanel("wishlist")} />
-                <span
-                  className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-sm font-bold border-white border-2 ml-[-7px]"
-                  onClick={() => handlePanel("wishlist")}
-                >
-                  {/* {totalItem} */}
-                  {wishItem}
-                </span>
+                {wishlist.length > 0 && (
+                  <span
+                    className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-sm font-bold border-white border-2 ml-[-7px]"
+                    onClick={() => handlePanel("wishlist")}
+                  >
+                    {wishlist.length}
+                  </span>
+                )}
 
                 {/* shopping bag icon */}
                 <HiShoppingBag onClick={() => handlePanel("cart")} />

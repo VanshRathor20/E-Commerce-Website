@@ -112,9 +112,6 @@ const Home = () => {
 
   const clearWishlist = () => setWishlist([]);
 
-  // wishlist item badge in navbar
-  const wishItem = wishlist.reduce((acc, item) => acc + item.quantity, 0);
-
   return (
     <div>
       {/* Navbar */}
@@ -123,7 +120,7 @@ const Home = () => {
         setSearchQuery={setSearchQuery}
         handlePanel={handlePanel}
         totalItem={totalItem}
-        wishItem={wishItem}
+        wishlist={wishlist}
       />
 
       {/* Sale Sticky bar */}
