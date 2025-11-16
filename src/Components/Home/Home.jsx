@@ -16,7 +16,12 @@ const Home = () => {
   const [activePanel, setActivePanel] = useState("null");
   // track whether the order summary modal is visible
   const [orderSummary, setOrderSummary] = useState(false);
-  const [cart, setCart] = useState([]);
+
+  const [cart, setCart] = useState(()=>{
+    const savestCart=localStorage.getItem('cart');
+    const savestCartObj=savestCart ? JSON.parse(savestCart):[];
+    return savestCartObj;
+  });
   // show OrderPlace (payment) view after clicking Place Order
   const [showOrderPlace, setShowOrderPlace] = useState(false);
   const [wishlist, setWishlist] = useState([]);
@@ -45,7 +50,7 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  //save items to local storage 
+  //save cart items to local storage 
   useEffect(()=>{
     localStorage.setItem('cart',JSON.stringify(cart));
   },[cart]);
@@ -117,8 +122,6 @@ const Home = () => {
 
   const clearWishlist = () => setWishlist([]);
 
-  // wishlist item badge in navbar
-  // const wishItem = wishlist.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div>
