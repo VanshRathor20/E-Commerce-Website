@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ProductList from "../Products/ProductList";
 import { GoHeartFill } from "react-icons/go";
 
-const Products = ({ searchQuery, AddToCart }) => {
+const Products = ({ searchQuery, AddToCart, addToWishlist, wishlist = [] }) => {
   const categories = [
     "All",
     "Mens",
@@ -31,6 +31,8 @@ const Products = ({ searchQuery, AddToCart }) => {
     return matchesCategory && matchesSearch;
   });
 
+  const isInWishlist = (product) => wishlist.some((p) => p.id === product.id);
+
   const renderProducts = () => {
     return filterItems.map((i) => (
       <div
@@ -38,7 +40,14 @@ const Products = ({ searchQuery, AddToCart }) => {
         className="w-[250px] h-[350px] bg-white shadow-lg rounded-lg p-5 flex flex-col justify-between"
       >
         <div className="relative">
-          <button className="absolute top-0 right-0 text-zinc-300 text-3xl hover:text-red-500 transition-colors">
+          <button
+            onClick={() => addToWishlist(i)}
+            className={`cursor-pointer absolute top-0 right-0 text-3xl transition-colors ${
+              isInWishlist(i)
+                ? "text-red-500"
+                : "text-zinc-300 hover:text-red-500"
+            }`}
+          >
             <GoHeartFill />
           </button>
 

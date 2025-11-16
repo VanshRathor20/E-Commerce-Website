@@ -10,6 +10,7 @@ const Navbar = ({
   setSearchQuery,
   handlePanel,
   totalItem,
+  wishItem
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,20 +76,20 @@ const Navbar = ({
                   className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-sm font-bold border-white border-2 ml-[-7px]"
                   onClick={() => handlePanel("wishlist")}
                 >
-                  0
+                  {/* {totalItem} */}
+                  {wishItem}
                 </span>
 
                 {/* shopping bag icon */}
                 <HiShoppingBag onClick={() => handlePanel("cart")} />
-                {
-                    totalItem>0 && <span
+                {totalItem > 0 && (
+                  <span
                     className="bg-red-600 rounded-full w-5 h-5 text-white font-bold flex justify-center items-center text-sm border-white border-2 ml-[-7px]"
                     onClick={() => handlePanel("cart")}
                   >
                     {totalItem}
                   </span>
-                  }
-                
+                )}
               </button>
             </div>
 

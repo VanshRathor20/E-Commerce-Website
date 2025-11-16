@@ -19,7 +19,7 @@ const Home = () => {
   const [cart, setCart] = useState([]);
   // show OrderPlace (payment) view after clicking Place Order
   const [showOrderPlace, setShowOrderPlace] = useState(false);
-  const [wishlist,setWishlist]=useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   // Scroll detection for Back to Top button
   useEffect(() => {
@@ -89,13 +89,31 @@ const Home = () => {
     });
   };
 
-  // total item badhe in navbar
+  // cart item badge in navbar
   const totalItem = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  // toggle wishlist (add/remove) to avoid duplicates
+  const addToWishlist = (product) => {
+    setWishlist((prev) => {
+      const exists = prev.find((p) => p.id === product.id);
+      if (exists) return prev.filter((p) => p.id !== product.id);
+      return [...prev, product];
+    });
+  };
+
+  const removeFromWishlist = (productId) => {
+    setWishlist((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  const clearWishlist = () => setWishlist([]);
+
+  // wishlist item badge in navbar
+  const wishItem = wishlist.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div>
@@ -105,6 +123,7 @@ const Home = () => {
         setSearchQuery={setSearchQuery}
         handlePanel={handlePanel}
         totalItem={totalItem}
+        wishItem={wishItem}
       />
 
       {/* Sale Sticky bar */}
@@ -114,7 +133,12 @@ const Home = () => {
       <Banner />
 
       {/* Product */}
-      <Products searchQuery={searchQuery} AddToCart={AddToCart} />
+      <Products
+        searchQuery={searchQuery}
+        AddToCart={AddToCart}
+        addToWishlist={addToWishlist}
+        wishlist={wishlist}
+      />
 
       {/* Cart tab */}
       <Cart
@@ -126,7 +150,14 @@ const Home = () => {
       />
 
       {/* Wishlist */}
-      <Wishlist activePanel={activePanel} closePanel={closePanel} />
+      <Wishlist
+        activePanel={activePanel}
+        closePanel={closePanel}
+        wishlist={wishlist}
+        removeFromWishlist={removeFromWishlist}
+        clearWishlist={clearWishlist}
+        AddToCart={AddToCart}
+      />
 
       {/* Order Summary */}
       {orderSummary && (
@@ -137,10 +168,9 @@ const Home = () => {
           orderTotal={subtotal + 50}
           closePanel={() => setOrderSummary(false)}
           onPlaceOrder={() => {
-             setShowOrderPlace(true);  
-              setOrderSummary(false);
-            }}
-            
+            setShowOrderPlace(true);
+            setOrderSummary(false);
+          }}
         />
       )}
       {showOrderPlace && (
@@ -155,8 +185,7 @@ const Home = () => {
           }}
         />
       )}
-  {/* Order Placement (payment) - shown after clicking Place Order */}
-
+      {/* Order Placement (payment) - shown after clicking Place Order */}
 
       {/* Back to Top Button */}
       <button
