@@ -45,6 +45,11 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  //save items to local storage 
+  useEffect(()=>{
+    localStorage.setItem('cart',JSON.stringify(cart));
+  },[cart]);
+
   // Back to top function
   const scrollToTop = () => {
     window.scrollTo({
@@ -111,6 +116,9 @@ const Home = () => {
   };
 
   const clearWishlist = () => setWishlist([]);
+
+  // wishlist item badge in navbar
+  // const wishItem = wishlist.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div>
