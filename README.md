@@ -40,20 +40,20 @@ Follow these steps if you want to run the project locally:
 git clone https://github.com/VanshRathor20/E-Commerce-Website.git
 ```
 
-### 2️⃣ Install dependencies
+2️⃣ Install dependencies
 ```bash
 cd E-Commerce-Website
 npm install
 ```
 
-###3️⃣ Run the development server
+3️⃣ Run the development server
 ```bash
 npm run dev
 ```
 
 ---
 
-##🧠 How It Works
+🧠 How It Works
 
 This project uses React to dynamically render products and manage cart state.
 The cart logic allows users to:
