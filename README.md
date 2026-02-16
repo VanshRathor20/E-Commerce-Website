@@ -6,14 +6,11 @@ This project showcases a complete online shopping interface with product listing
 ---
 
 ### 🌐 Live Demo
+🔗 Live URL: https://e-mart-website.netlify.app
 
 ---
 
-🔗 **Live Demo:** https://e-mart-website.netlify.app
-
----
-
-## 📦 Features
+## 🚀 Features
 
 - Homepage with product cards
 - Add to cart functionality
@@ -84,7 +81,7 @@ This project showcases a complete online shopping interface with product listing
 
 ---
 
-## 🚀 Getting Started — Run Locally
+## ⚙️ Getting Started — Run Locally
 
 Follow these steps if you want to run the project locally:
 
