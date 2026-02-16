@@ -3,6 +3,9 @@
 Welcome to **E-Mart**, a fully responsive **E-Commerce Website** built with modern web technologies.  
 This project showcases a complete online shopping interface with product listings, cart functionality, and intuitive design — perfect for learning and portfolio use.
 
+---
+🌐 Live Demo
+
 🔗 **Live Demo:** https://e-mart-website.netlify.app
 
 ---
