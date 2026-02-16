@@ -7,6 +7,8 @@ This project showcases a complete online shopping interface with product listing
 
 ### 🌐 Live Demo
 
+---
+
 🔗 **Live Demo:** https://e-mart-website.netlify.app
 
 ---
@@ -115,18 +117,20 @@ The cart logic allows users to:
 - Remove items
 
 ---
+
 ## 💡 Future Improvements
 
 - Add routing (React Router)
 - Integrate backend API (Products, Orders)
 - Add user authentication
 - Add payment gateway
+  
 ---
 
 ## ⭐ Feedback & Contributions
 
-- If you have suggestions or want to help improve the project — feel free to open an issue or submit a pull request!
----
+- If you have suggestions or want to help improve the project
+- feel free to open an issue or submit a pull request!
 
 ## 👤 Author
 - Vansh Rathor
