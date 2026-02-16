@@ -4,7 +4,8 @@ Welcome to **E-Mart**, a fully responsive **E-Commerce Website** built with mode
 This project showcases a complete online shopping interface with product listings, cart functionality, and intuitive design — perfect for learning and portfolio use.
 
 ---
-🌐 Live Demo
+
+### 🌐 Live Demo
 
 🔗 **Live Demo:** https://e-mart-website.netlify.app
 
@@ -114,14 +115,15 @@ The cart logic allows users to:
 - Remove items
 
 ---
-##💡 Future Improvements
+## 💡 Future Improvements
 
 - Add routing (React Router)
 - Integrate backend API (Products, Orders)
 - Add user authentication
 - Add payment gateway
 ---
-##⭐ Feedback & Contributions
+
+## ⭐ Feedback & Contributions
 
 - If you have suggestions or want to help improve the project — feel free to open an issue or submit a pull request!
 ---
