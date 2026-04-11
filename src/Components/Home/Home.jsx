@@ -4,29 +4,17 @@ import Products from "../Products/Products";
 import SaleStickyBar from "../SaleStickyBar/SaleStickyBar";
 import { HiArrowUp } from "react-icons/hi";
 
-const Home = ({ searchQuery, AddToCart, addToWishlist, wishlist }) => {
+const Home = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > 100) {
-        if (currentScrollY > lastScrollY) {
-          setShowBackToTop(true);
-        } else {
-          setShowBackToTop(false);
-        }
-      } else {
-        setShowBackToTop(false);
-      }
-      setLastScrollY(currentScrollY);
+      setShowBackToTop(window.scrollY > 400);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -37,17 +25,12 @@ const Home = ({ searchQuery, AddToCart, addToWishlist, wishlist }) => {
       <SaleStickyBar />
       <Banner />
       <div className="w-full bg-[#FFFFFF]">
-        <Products
-          searchQuery={searchQuery}
-          AddToCart={AddToCart}
-          addToWishlist={addToWishlist}
-          wishlist={wishlist}
-        />
+        <Products />
       </div>
 
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 z-40 bg-fashion-black hover:bg-[#575757] text-fashion-white p-3 rounded-none shadow-lg transition-all duration-500 transform ${
+        className={`fixed bottom-8 right-8 z-40 bg-[#000000] hover:bg-[#575757] text-[#FFFFFF] p-4 rounded-full shadow-lg transition-all duration-300 transform flex items-center justify-center cursor-pointer ${
           showBackToTop
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-4 scale-95 pointer-events-none"

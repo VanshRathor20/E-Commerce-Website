@@ -4,20 +4,18 @@ import { IoSearchSharp } from "react-icons/io5";
 import { GoHeartFill, GoHeart } from "react-icons/go";
 import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { HiMenu, HiX } from "react-icons/hi";
+import { useStore } from "../../context/StoreContext";
 
-const Navbar = ({
-  handleScrollToProducts,
-  setSearchQuery,
-  handlePanel,
-  totalItem,
-  wishlist = [],
-}) => {
+const Navbar = () => {
+  const { state, dispatch } = useStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
+
+  const totalItem = state.cart.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +25,11 @@ const Navbar = ({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleScrollToProducts = () => {
+    const section = document.getElementById("products-section");
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleShopClick = (e) => {
     e.preventDefault();
@@ -50,16 +53,16 @@ const Navbar = ({
   return (
     <>
       <header
-        className={`bg-white sticky top-0 left-0 right-0 z-[1000] transition-shadow duration-300 border-b border-[#E1E1E1] ${
+        className={`bg-[#FFFFFF] sticky top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b border-[#E1E1E1] ${
           isScrolled ? "shadow-sm" : ""
         }`}
       >
-        <nav className="h-[80px] flex items-center justify-between w-full mx-auto px-8 py-4 relative">
+        <nav className="h-[64px] flex items-center justify-between w-full mx-auto px-6 lg:px-12 relative">
           
           <Link
             to="/"
-            className="text-[#000000] font-bold uppercase text-2xl tracking-[0.05em] cursor-pointer whitespace-nowrap"
-            onClick={() => window.scrollTo(0,0)}
+            className="text-[#000000] font-[900] uppercase text-[18px] tracking-[0.08em] cursor-pointer whitespace-nowrap"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             FASHION STORE
           </Link>
@@ -71,20 +74,20 @@ const Navbar = ({
                   <a 
                     key={link.name} 
                     href="/" 
-                    className="text-[13px] uppercase tracking-[0.1em] text-[#000000] hover:text-[#757575] transition-colors relative group font-semibold"
+                    className="text-[12px] uppercase tracking-[0.12em] text-[#000000] hover:text-[#757575] transition-all duration-300 relative group font-[500]"
                     onClick={handleShopClick}
                   >
                     {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#757575] transition-all duration-300 group-hover:w-full"></span>
+                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
                   </a>
                 ) : (
                   <Link 
                     key={link.name} 
                     to={link.path} 
-                    className="text-[13px] uppercase tracking-[0.1em] text-[#000000] hover:text-[#757575] transition-colors relative group font-semibold"
+                    className="text-[12px] uppercase tracking-[0.12em] text-[#000000] hover:text-[#757575] transition-all duration-300 relative group font-[500]"
                   >
                     {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#757575] transition-all duration-300 group-hover:w-full"></span>
+                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
                   </Link>
                 )
              ))}
@@ -94,45 +97,45 @@ const Navbar = ({
           <div className="hidden md:flex justify-end gap-x-6 items-center">
             <div className="flex items-center">
               {isSearchOpen ? (
-                <div className="flex items-center border-b border-[#E1E1E1] pb-1 animate-fade-in">
+                <div className="flex items-center border-b border-[#000000] pb-1 animate-fade-in">
                   <input
                     type="text"
                     autoComplete="off"
                     placeholder="SEARCH"
                     autoFocus
                     onBlur={() => { setTimeout(() => setIsSearchOpen(false), 200) }}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-40 text-[13px] focus:outline-none uppercase tracking-widest placeholder:text-[#757575] text-[#000000] bg-transparent"
+                    onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
+                    className="w-40 text-[12px] focus:outline-none uppercase tracking-[0.1em] placeholder:text-[#757575] text-[#000000] bg-transparent"
                   />
-                  <IoSearchSharp className="text-xl text-[#000000] cursor-pointer" />
+                  <IoSearchSharp className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]" />
                 </div>
               ) : (
                 <IoSearchSharp 
-                  className="text-[22px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors" 
+                  className="text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors stroke-[1.5]" 
                   onClick={() => setIsSearchOpen(true)}
                 />
               )}
             </div>
 
             <button 
-              className="relative text-[22px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors flex items-center"
-              onClick={() => handlePanel("wishlist")}
+              className="relative text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors flex items-center stroke-[1.5]"
+              onClick={() => dispatch({ type: 'SET_PANEL', payload: 'wishlist' })}
             >
-              {wishlist && wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
-              {wishlist && wishlist.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#000000] rounded-full w-4 h-4 text-[#FFFFFF] flex justify-center items-center text-[10px] font-bold">
-                  {wishlist.length}
+              {state.wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
+              {state.wishlist.length > 0 && (
+                <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
+                  {state.wishlist.length}
                 </span>
               )}
             </button>
 
             <button 
-              className="relative text-[22px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors flex items-center"
-              onClick={() => handlePanel("cart")}
+              className={`relative text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-all duration-300 flex items-center stroke-[1.5] ${state.cartAddedPulse ? 'scale-125' : 'scale-100'}`}
+              onClick={() => dispatch({ type: 'SET_PANEL', payload: 'cart' })}
             >
               {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
               {totalItem > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#000000] rounded-full w-4 h-4 text-[#FFFFFF] flex justify-center items-center text-[10px] font-bold">
+                <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
                   {totalItem}
                 </span>
               )}
@@ -142,12 +145,12 @@ const Navbar = ({
           {/* Mobile Actions */}
           <div className="flex items-center gap-x-5 md:hidden">
             <IoSearchSharp 
-              className="text-2xl text-[#000000] cursor-pointer" 
+              className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]" 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-2xl text-[#000000] cursor-pointer"
+              className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]"
             >
               {isMobileMenuOpen ? <HiX /> : <HiMenu />}
             </button>
@@ -155,25 +158,25 @@ const Navbar = ({
         </nav>
 
         {isSearchOpen && (
-          <div className="md:hidden w-full bg-white px-5 py-4 border-t border-[#E1E1E1]">
-             <div className="flex items-center border border-[#E1E1E1] p-2">
+          <div className="md:hidden w-full bg-[#FFFFFF] px-6 py-4 border-t border-[#E1E1E1]">
+             <div className="flex items-center border border-[#000000] p-2">
                 <input
                   type="text"
                   placeholder="SEARCH PRODUCTS..."
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 focus:outline-none text-[13px] tracking-widest uppercase bg-transparent p-1 text-[#000000]"
+                  onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
+                  className="flex-1 focus:outline-none text-[12px] tracking-[0.1em] uppercase bg-transparent p-1 text-[#000000]"
                 />
              </div>
           </div>
         )}
 
         {isMobileMenuOpen && (
-          <div className="md:hidden w-full bg-white border-t border-[#E1E1E1] flex flex-col uppercase tracking-widest text-[13px]">
+          <div className="md:hidden w-full bg-[#FFFFFF] border-t border-[#E1E1E1] flex flex-col uppercase tracking-[0.12em] text-[12px]">
              {navLinks.map((link) => (
                 link.name === "SHOP" ? (
                   <button 
                     key={link.name}
-                    className="w-full text-left py-4 px-5 border-b border-[#E1E1E1] hover:bg-gray-50 text-[#000000] font-bold"
+                    className="w-full text-left py-4 px-6 border-b border-[#E1E1E1] hover:bg-[#F9F9F9] text-[#000000] font-[500] transition-colors"
                     onClick={(e) => {
                       setIsMobileMenuOpen(false);
                       handleShopClick(e);
@@ -185,7 +188,7 @@ const Navbar = ({
                   <Link 
                     key={link.name}
                     to={link.path}
-                    className="w-full text-left py-4 px-5 border-b border-[#E1E1E1] hover:bg-gray-50 text-[#000000] font-bold block"
+                    className="w-full text-left py-4 px-6 border-b border-[#E1E1E1] hover:bg-[#F9F9F9] text-[#000000] font-[500] block transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -193,16 +196,16 @@ const Navbar = ({
                 )
              ))}
              
-             <div className="flex items-center justify-around py-5">
+             <div className="flex items-center justify-around py-6 bg-[#F9F9F9]">
                <button 
-                  className="flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000]"
-                  onClick={() => { handlePanel("wishlist"); setIsMobileMenuOpen(false); }}
+                  className="flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000] transition-colors"
+                  onClick={() => { dispatch({ type: 'SET_PANEL', payload: 'wishlist' }); setIsMobileMenuOpen(false); }}
                >
-                  <div className="relative text-2xl">
-                     {wishlist && wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
-                     {wishlist && wishlist.length > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-[#000000] rounded-full w-4 h-4 text-[#FFFFFF] flex justify-center items-center text-[10px] font-bold">
-                          {wishlist.length}
+                  <div className="relative text-[20px] stroke-[1.5]">
+                     {state.wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
+                     {state.wishlist.length > 0 && (
+                        <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
+                          {state.wishlist.length}
                         </span>
                      )}
                   </div>
@@ -210,13 +213,13 @@ const Navbar = ({
                </button>
 
                <button 
-                  className="flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000]"
-                  onClick={() => { handlePanel("cart"); setIsMobileMenuOpen(false); }}
+                  className={`flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000] transition-all duration-300 ${state.cartAddedPulse ? 'scale-125' : 'scale-100'}`}
+                  onClick={() => { dispatch({ type: 'SET_PANEL', payload: 'cart' }); setIsMobileMenuOpen(false); }}
                >
-                  <div className="relative text-2xl">
+                  <div className="relative text-[20px] stroke-[1.5]">
                      {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
                      {totalItem > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-[#000000] rounded-full w-4 h-4 text-[#FFFFFF] flex justify-center items-center text-[10px] font-bold">
+                        <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
                           {totalItem}
                         </span>
                      )}

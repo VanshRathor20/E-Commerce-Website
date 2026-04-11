@@ -1,24 +1,92 @@
 @import "tailwindcss";
-@config "./tailwind.config.js";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@theme {
+  --color-fashion-white: #FFFFFF;
+  --color-fashion-black: #000000;
+  --color-fashion-grey: #757575;
+  --color-fashion-border: #E1E1E1;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
 
 html, body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--color-fashion-white, #FFFFFF);
-  color: var(--color-fashion-grey, #757575);
-  line-height: 1.6;
+  background-color: #FFFFFF;
+  color: #757575;
+  line-height: 1.8;
+  font-size: 15px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
 }
 
 .scroll::-webkit-scrollbar {
   display: none;
+}
+
+/* Base Interactions */
+input, button, a {
+  transition: all 0.3s ease;
+}
+
+/* Section Header Typography */
+.section-wrapper {
+  padding: 80px 24px;
+}
+@media (min-width: 1024px) {
+  .section-wrapper {
+    padding: 80px 48px;
+  }
+}
+
+.section-heading-container {
+  text-align: center;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #757575;
+  letter-spacing: 0.35em;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+  text-transform: uppercase;
+  color: #000000;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.section-underline {
+  width: 40px;
+  height: 2px;
+  background-color: #000000;
+  margin: 0 auto 48px auto;
+}
+
+/* Shimmer Loading Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 @keyframes marquee {
@@ -30,4 +98,20 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
   white-space: nowrap;
   animation: marquee 15s linear infinite;
+}
+
+/* Custom Fade Transition */
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

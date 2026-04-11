@@ -1,50 +1,60 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { FaFacebook, FaInstagram, FaTwitter, FaPinterest } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-fashion-white border-t border-fashion-border pt-16 pb-8 px-5 lg:px-10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-[13px] uppercase tracking-widest text-fashion-grey">
+    <footer className="w-full bg-[#FFFFFF] border-t border-[#E1E1E1] pt-[64px] pb-[32px] px-6 lg:px-12 mt-auto">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24 mb-[64px]">
         
-        {/* Brand Info */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-fashion-black font-bold text-lg mb-2">FASHION STORE</h2>
-          <p className="leading-relaxed">
-            ELEVATING MINIMALIST STYLE WITH CURATED DESIGNS. 
-            <br className="hidden lg:block"/> EVERY PIECE CRAFTED FOR EXCELLENCE.
+        {/* Column 1 */}
+        <div className="flex flex-col gap-6">
+          <h2 className="text-[#000000] font-[900] uppercase text-[18px] tracking-[0.08em]">
+            FASHION STORE
+          </h2>
+          <p className="text-[#757575] italic text-[14px] leading-[1.8] max-w-sm">
+            Defining a lifestyle built around purposeful aesthetic choices and uncompromising quality.
           </p>
-          <p className="mt-4">
-            INFO@FASHIONSTORE.COM<br/>
-            +1 234 567 890
-          </p>
+          <div className="flex gap-4 mt-2">
+            {[FaInstagram, FaFacebook, FaTwitter, FaPinterest].map((Icon, i) => (
+              <a key={i} href="#" className="w-10 h-10 border border-[#E1E1E1] flex items-center justify-center text-[#000000] hover:bg-[#000000] hover:text-[#FFFFFF] transition-colors rounded-none">
+                <Icon size={16} />
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Quick Links */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-fashion-black font-bold mb-2">QUICK LINKS</h3>
-          <ul className="flex flex-col gap-2">
-            <li><a href="#" className="hover:text-fashion-black transition-colors">SHOP ALL</a></li>
-            <li><a href="#" className="hover:text-fashion-black transition-colors">NEW ARRIVALS</a></li>
-            <li><a href="#" className="hover:text-fashion-black transition-colors">OUR STORY</a></li>
-            <li><a href="#" className="hover:text-fashion-black transition-colors">SHIPPING & RETURNS</a></li>
-            <li><a href="#" className="hover:text-fashion-black transition-colors">FAQ</a></li>
+        {/* Column 2 */}
+        <div className="flex flex-col gap-6">
+          <h3 className="text-[#000000] font-bold text-[13px] uppercase tracking-[0.1em]">QUICK LINKS</h3>
+          <ul className="flex flex-col gap-4 text-[#757575] text-[13px] uppercase tracking-widest">
+            {["SHOP", "COLLECTIONS", "ABOUT US", "CONTACT", "FAQ"].map((link) => (
+              <li key={link}>
+                <Link to={link === "SHOP" ? "/" : `/${link.replace(" US", "").toLowerCase()}`} className="hover:text-[#000000] transition-colors relative group w-fit inline-block">
+                  {link}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Newsletter Signup */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-fashion-black font-bold mb-2">JOIN OUR MAILING LIST</h3>
-          <p>STAY UPDATED WITH OUR LATEST COLLECTIONS AND EXCLUSIVE OFFERS.</p>
-          
-          <form className="mt-2 flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+        {/* Column 3 */}
+        <div className="flex flex-col gap-6">
+          <h3 className="text-[#000000] font-bold text-[13px] uppercase tracking-[0.1em]">JOIN OUR MAILING LIST</h3>
+          <p className="text-[#757575] text-[13px] leading-[1.6]">
+            Subscribe to receive updates, access to exclusive deals, and more.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-0 w-full mt-2" onSubmit={(e) => e.preventDefault()}>
             <input 
               type="email" 
               placeholder="ENTER YOUR EMAIL" 
-              className="w-full border border-fashion-border p-3 outline-none focus:border-fashion-black bg-transparent object-none rounded-none placeholder:text-fashion-grey text-fashion-black"
+              className="flex-1 border border-[#E1E1E1] p-[14px] outline-none focus:border-[#000000] text-[#000000] text-[12px] uppercase tracking-widest placeholder:text-[#757575] shadow-none rounded-none"
               required
             />
             <button 
               type="submit" 
-              className="w-full bg-fashion-black text-fashion-white p-3 font-bold hover:bg-[#575757] transition-colors rounded-none"
+              className="bg-[#000000] text-[#FFFFFF] px-6 py-[14px] font-bold uppercase tracking-[0.1em] text-[12px] hover:bg-[#575757] transition-colors border border-[#000000] min-w-[120px] rounded-none sm:ml-[-1px]"
             >
               SUBSCRIBE
             </button>
@@ -54,11 +64,13 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-fashion-border flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] uppercase tracking-widest text-fashion-grey">
-        <p>&copy; {new Date().getFullYear()} FASHION STORE. ALL RIGHTS RESERVED.</p>
-        <div className="flex gap-4">
-          <a href="#" className="hover:text-fashion-black">TERMS OF SERVICE</a>
-          <a href="#" className="hover:text-fashion-black">PRIVACY POLICY</a>
+      <div className="max-w-[1280px] mx-auto border-t border-[#E1E1E1] pt-[32px] text-center flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-[#757575] text-[12px] uppercase tracking-widest">
+          &copy; {new Date().getFullYear()} FASHION STORE. ALL RIGHTS RESERVED.
+        </p>
+        <div className="flex gap-6 text-[#757575] text-[12px] uppercase tracking-widest">
+          <a href="#" className="hover:text-[#000000] transition-colors">PRIVACY</a>
+          <a href="#" className="hover:text-[#000000] transition-colors">TERMS</a>
         </div>
       </div>
     </footer>
