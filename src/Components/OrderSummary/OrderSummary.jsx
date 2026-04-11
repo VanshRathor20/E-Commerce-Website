@@ -3,8 +3,8 @@ import { HiX } from "react-icons/hi";
 
 const OrderSummary = ({ cart, subtotal, shippingFee, orderTotal, closePanel, onPlaceOrder }) => {
   return (
-    <section className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
-      <div className="bg-fashion-white w-full max-w-xl p-8 border border-fashion-border shadow-2xl relative">
+    <section className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/60">
+      <div className="bg-[#FFFFFF] w-[90vw] sm:w-full max-w-[560px] p-[24px] sm:p-[40px] border border-[#E1E1E1] shadow-2xl relative z-[9999] fixed top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%]">
         <button
           onClick={closePanel}
           className="absolute top-4 right-4 text-fashion-black hover:text-fashion-grey transition-colors text-[20px] cursor-pointer bg-transparent border-none"
@@ -23,10 +23,24 @@ const OrderSummary = ({ cart, subtotal, shippingFee, orderTotal, closePanel, onP
             </p>
           ) : (
             cart.map((item) => (
-              <div key={item.id} className="flex justify-between items-center border-b border-fashion-border pb-3">
-                <span className="text-fashion-black text-[13px] font-semibold uppercase tracking-widest leading-tight pr-4">
-                  {item.name} <span className="text-fashion-grey">x{item.quantity}</span>
-                </span>
+              <div key={item.id} className="flex justify-between items-center border-b border-[#E1E1E1] pb-3">
+                <div className="flex items-center gap-4">
+                  <div className="w-[48px] h-[48px] flex-shrink-0 bg-[#F5F5F5] border border-[#E1E1E1] relative overflow-hidden flex items-center justify-center">
+                    {item.thumbnail || item.image ? (
+                      <img
+                        src={item.thumbnail || item.image}
+                        alt={item.title || item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                  <span className="text-fashion-black text-[13px] font-semibold uppercase tracking-widest leading-tight">
+                    {item.title || item.name} <span className="text-fashion-grey text-[12px] ml-1">x{item.quantity}</span>
+                  </span>
+                </div>
                 <span className="text-fashion-black text-[14px] font-bold">
                   ₹{(item.price * item.quantity).toFixed(2)}
                 </span>

@@ -7,15 +7,17 @@ const Cart = ({ activePanel, closePanel, cart, setCart, setOrderSummary }) => {
       {/* Backdrop overlay */}
       {activePanel === "cart" && (
         <div
-          className="fixed inset-0 bg-black/50 z-[9998] transition-opacity"
+          className="fixed inset-0 bg-black/60 z-[9998] transition-opacity"
           onClick={closePanel}
         ></div>
       )}
 
       {/* Side Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-white border-l border-fashion-border flex flex-col transition-transform duration-350 ease-in-out overflow-y-auto ${
-          activePanel === "cart" ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-[#FFFFFF] border-l border-[#E1E1E1] flex flex-col transition-transform duration-350 ease-in-out overflow-y-auto ${
+          activePanel === "cart" 
+            ? "translate-y-0 sm:translate-x-0" 
+            : "translate-y-full sm:translate-y-0 sm:translate-x-full"
         }`}
       >
         {/* Header */}

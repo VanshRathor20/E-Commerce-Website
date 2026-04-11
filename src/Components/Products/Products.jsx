@@ -123,7 +123,7 @@ const Products = ({
              {/* Top badges */}
              <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
                 {i.discountPercentage > 0 && (
-                   <span className="bg-fashion-black text-fashion-white text-[10px] uppercase font-bold tracking-widest px-2 py-1">
+                   <span className="bg-[#000000] text-[#FFFFFF] text-[10px] uppercase font-bold tracking-[0.1em] px-[8px] py-[4px] rounded-none">
                      SALE
                    </span>
                 )}
@@ -132,16 +132,14 @@ const Products = ({
              {/* Wishlist Button */}
              <button
                 onClick={() => addToWishlist && addToWishlist(i)}
-                className={`absolute top-3 right-3 text-xl z-10 transition-colors ${
-                  isInWishlist(i) ? "text-fashion-black" : "text-fashion-grey hover:text-fashion-black"
-                }`}
+                className="absolute top-3 right-3 text-xl z-10 transition-colors text-[#000000]"
              >
                 {isInWishlist(i) ? <GoHeartFill /> : <GoHeart />}
              </button>
 
              {/* Sliding Add To Cart Button */}
              <button
-               className="absolute bottom-0 w-full left-0 bg-fashion-black text-fashion-white py-4 text-[12px] uppercase font-bold tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out hover:bg-[#575757]"
+               className="absolute bottom-0 w-full left-0 bg-[#000000] text-[#FFFFFF] py-[14px] text-[12px] uppercase font-bold tracking-[0.15em] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-350 ease-out hover:!bg-[#575757] rounded-none"
                onClick={() => AddToCart && AddToCart(i)}
              >
                Add to Cart
@@ -210,7 +208,7 @@ const Products = ({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 gap-y-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 gap-y-12">
              {renderProducts()}
           </div>
         )}
