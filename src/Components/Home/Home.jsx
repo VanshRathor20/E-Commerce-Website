@@ -1,53 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar/Navbar";
 import Banner from "../Banner/Banner";
 import Products from "../Products/Products";
-import Cart from "../Cart/Cart";
-import Wishlist from "../Wishlist/Wishlist";
 import SaleStickyBar from "../SaleStickyBar/SaleStickyBar";
 import { HiArrowUp } from "react-icons/hi";
-import OrderSummary from "../OrderSummary/OrderSummary";
-import OrderPlace from "../OrderPlace/OrderPlace";
-import Footer from "../Footer/Footer";
 
-const Home = () => {
-  // safe JSON parse helper: returns `fallback` when value is null/invalid
-  const safeParse = (value, fallback = []) => {
-    try {
-      return value ? JSON.parse(value) : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  };
-  const [searchQuery, setSearchQuery] = useState("");
+const Home = ({ searchQuery, AddToCart, addToWishlist, wishlist }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [activePanel, setActivePanel] = useState("null");
-  // track whether the order summary modal is visible
-  const [orderSummary, setOrderSummary] = useState(false);
 
-  const [cart, setCart] = useState(()=>{
-    const savestCart=localStorage.getItem('cart');
-    const savestCartObj=savestCart ? JSON.parse(savestCart):[];
-    return savestCartObj;
-  });
-
-  // show OrderPlace (payment) view after clicking Place Order
-  const [showOrderPlace, setShowOrderPlace] = useState(false);
-
-  const [wishlist, setWishlist] = useState(() => {
-    const savedWishlist = localStorage.getItem("wishlist");
-    return safeParse(savedWishlist);
-  });
-
-  // Scroll detection for Back to Top button
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Show button when scrolled down more than 300px
       if (currentScrollY > 100) {
-        // Show button when scrolling down, hide when scrolling up
         if (currentScrollY > lastScrollY) {
           setShowBackToTop(true);
         } else {
@@ -56,7 +21,6 @@ const Home = () => {
       } else {
         setShowBackToTop(false);
       }
-
       setLastScrollY(currentScrollY);
     };
 
@@ -64,103 +28,15 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  //save cart items to local storage 
-  useEffect(()=>{
-    localStorage.setItem('cart',JSON.stringify(cart));
-  },[cart]);
-
-  //save wishlist items to local storage
-  useEffect(()=>{
-    localStorage.setItem('wishlist',JSON.stringify(wishlist));
-  },[wishlist]);
-
-  // Back to top function
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  // search to product section
-  const handleScrollToProducts = () => {
-    const section = document.getElementById("products-section");
-    if (section) {
-      section.scrollIntoView({ behaviour: "smooth" });
-    }
-  };
-
-  //  Cart & Wishlist show panel function
-  const handlePanel = (tabName) => {
-    setActivePanel((prev) => (prev === tabName ? null : tabName));
-  };
-
-  // cart & wishlist hide panel function
-  const closePanel = () => setActivePanel(null);
-
-  // Add to Cart Function
-  const AddToCart = (product) => {
-    setCart((prevCart) => {
-      // Check if product already exists in cart
-      const existingItem = prevCart.find((item) => item.id === product.id);
-
-      if (existingItem) {
-        // If exists, increase quantity
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        // If new product, add with quantity 1
-        return [...prevCart, { ...product, quantity: 1 }];
-      }
-    });
-  };
-
-  // cart item badge in navbar
-  const totalItem = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  const subtotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-
-  // toggle wishlist (add/remove) to avoid duplicates
-  const addToWishlist = (product) => {
-    setWishlist((prev) => {
-      const exists = prev.find((p) => p.id === product.id);
-      if (exists) return prev.filter((p) => p.id !== product.id);
-      return [...prev, product];
-    });
-  };
-
-  const removeFromWishlist = (productId) => {
-    setWishlist((prev) => prev.filter((p) => p.id !== productId));
-  };
-
-  const clearWishlist = () => setWishlist([]);
-
 
   return (
-    <div className="font-primarylw flex flex-col min-h-screen">
-      {/* Navbar */}
-      <Navbar
-        handleScrollToProducts={handleScrollToProducts}
-        setSearchQuery={setSearchQuery}
-        handlePanel={handlePanel}
-        totalItem={totalItem}
-        wishlist={wishlist}
-      />
-
-      {/* Sale Sticky bar */}
+    <>
       <SaleStickyBar />
-
-      {/* Banner */}
       <Banner />
-
-      {/* Product */}
-      <div className="flex-1 w-full bg-fashion-white">
+      <div className="w-full bg-[#FFFFFF]">
         <Products
           searchQuery={searchQuery}
           AddToCart={AddToCart}
@@ -169,57 +45,6 @@ const Home = () => {
         />
       </div>
 
-      {/* Cart tab */}
-      <Cart
-        activePanel={activePanel}
-        closePanel={closePanel}
-        cart={cart}
-        setCart={setCart}
-        setOrderSummary={setOrderSummary}
-      />
-
-      {/* Wishlist */}
-      <Wishlist
-        activePanel={activePanel}
-        closePanel={closePanel}
-        wishlist={wishlist}
-        removeFromWishlist={removeFromWishlist}
-        clearWishlist={clearWishlist}
-        AddToCart={AddToCart}
-      />
-
-      {/* Order Summary */}
-      {orderSummary && (
-        <OrderSummary
-          cart={cart}
-          subtotal={subtotal}
-          shippingFee={50}
-          orderTotal={subtotal + 50}
-          closePanel={() => setOrderSummary(false)}
-          onPlaceOrder={() => {
-            setShowOrderPlace(true);
-            setOrderSummary(false);
-          }}
-        />
-      )}
-      {showOrderPlace && (
-        <OrderPlace
-          subtotal={subtotal + 50}
-          onClose={() => setShowOrderPlace(false)}
-          onPaymentSuccess={() => {
-            // clear cart and hide payment UI after successful payment
-            setCart([]);
-            setShowOrderPlace(false);
-            alert("Order placed successfully!");
-          }}
-        />
-      )}
-      {/* Order Placement (payment) - shown after clicking Place Order */}
-
-      {/* Main Footer Component */}
-      <Footer />
-
-      {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
         className={`fixed bottom-6 right-6 z-40 bg-fashion-black hover:bg-[#575757] text-fashion-white p-3 rounded-none shadow-lg transition-all duration-500 transform ${
@@ -231,7 +56,7 @@ const Home = () => {
       >
         <HiArrowUp className="w-6 h-6" />
       </button>
-    </div>
+    </>
   );
 };
 
