@@ -23,7 +23,7 @@ export default function NotFound() {
           style={{
             fontSize: "clamp(80px, 15vw, 160px)",
             fontWeight: 900,
-            color: "#000000",
+            color: "var(--text-primary)",
             letterSpacing: "-4px",
             lineHeight: 1,
             margin: 0,
@@ -36,7 +36,7 @@ export default function NotFound() {
           style={{
             width: "40px",
             height: "2px",
-            background: "#000",
+            background: "var(--text-primary)",
             margin: "24px auto",
           }}
         />
@@ -47,7 +47,7 @@ export default function NotFound() {
             fontWeight: 700,
             letterSpacing: "0.25em",
             textTransform: "uppercase",
-            color: "#000",
+            color: "var(--text-primary)",
             marginBottom: "12px",
           }}
         >
@@ -56,7 +56,7 @@ export default function NotFound() {
 
         <p
           style={{
-            color: "#757575",
+            color: "var(--text-secondary)",
             fontSize: "14px",
             lineHeight: 1.6,
             marginBottom: "40px",
@@ -69,8 +69,8 @@ export default function NotFound() {
         <button
           onClick={() => navigate("/")}
           style={{
-            background: "#000",
-            color: "#fff",
+            background: "var(--btn-bg)",
+            color: "var(--btn-text)",
             border: "none",
             borderRadius: 0,
             padding: "14px 48px",
@@ -82,10 +82,10 @@ export default function NotFound() {
             transition: "background 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.target.style.background = "#575757";
+            e.target.style.background = "var(--btn-hover)";
           }}
           onMouseLeave={(e) => {
-            e.target.style.background = "#000";
+            e.target.style.background = "var(--btn-bg)";
           }}
         >
           BACK TO HOME

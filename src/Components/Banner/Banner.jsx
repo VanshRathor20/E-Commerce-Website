@@ -14,12 +14,12 @@ const Banner = () => {
         className="relative z-10 flex flex-col items-center justify-center gap-y-10 text-center px-5 w-full max-w-[800px]"
         data-aos="fade-up"
       >
-        <h1 className="text-[#FFFFFF] font-bold uppercase tracking-[0.15em] w-full" style={{ fontSize: "clamp(32px, 8vw, 96px)", lineHeight: 1.1 }}>
+        <h1 className="text-[var(--btn-text)] font-bold uppercase tracking-[0.15em] w-full" style={{ fontSize: "clamp(32px, 8vw, 96px)", lineHeight: 1.1 }}>
           FASHION<br/>STORE
         </h1>
 
         <button 
-          className="border-2 border-[#FFFFFF] text-[#FFFFFF] bg-transparent uppercase font-semibold text-[13px] tracking-widest px-10 py-4 transition-colors hover:bg-[#FFFFFF] hover:text-[#000000] w-full sm:w-auto"
+          className="border-2 border-[var(--btn-text)] text-[var(--btn-text)] bg-transparent uppercase font-semibold text-[13px] tracking-widest px-10 py-4 transition-colors hover:bg-[var(--bg-primary)] hover:text-[var(--text-primary)] w-full sm:w-auto"
           onClick={(e) => {
              e.preventDefault();
              const section = document.getElementById("products-section");

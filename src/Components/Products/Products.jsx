@@ -6,6 +6,7 @@ import { useStore } from "../../context/StoreContext";
 import { fetchUnifiedProducts } from "../../services/productService";
 import Filters from "../Filters/Filters";
 import SkeletonCard from "../SkeletonCard/SkeletonCard";
+import { useToast } from "../Toast/ToastContext";
 
 const PAGE_SIZE = 20;
 
@@ -18,6 +19,7 @@ const Products = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, dispatch } = useStore();
+  const { showToast } = useToast();
   const { wishlist, searchQuery } = state;
 
   const [allProducts, setAllProducts] = useState([]);
@@ -37,6 +39,7 @@ const Products = () => {
       setAllProducts(unified);
     } catch (error) {
       setIsFatalError(true);
+      showToast("Failed to load products", "error");
     } finally {
       setLoading(false);
     }
@@ -162,19 +165,19 @@ const Products = () => {
         id="products-section"
         className="section-wrapper w-full max-w-[1280px] mx-auto"
       >
-        <div className="flex flex-col items-center justify-center text-center p-[80px] border border-[#E1E1E1]">
-          <div className="w-[48px] h-[48px] border-2 border-[#000000] rounded-full flex items-center justify-center text-[#000000] text-[24px] font-bold mb-5">
+        <div className="flex flex-col items-center justify-center text-center p-[80px] border border-[var(--border-color)]">
+          <div className="w-[48px] h-[48px] border-2 border-[var(--text-primary)] rounded-full flex items-center justify-center text-[var(--text-primary)] text-[24px] font-bold mb-5">
             !
           </div>
-          <h2 className="text-[#000000] text-[20px] font-bold uppercase tracking-[0.1em] mb-3">
+          <h2 className="text-[var(--text-primary)] text-[20px] font-bold uppercase tracking-[0.1em] mb-3">
             SOMETHING WENT WRONG
           </h2>
-          <p className="text-[#757575] text-[15px] mb-8">
+          <p className="text-[var(--text-secondary)] text-[15px] mb-8">
             We couldn't load products. Please try again.
           </p>
           <button
             onClick={loadProducts}
-            className="bg-[#000000] text-[#FFFFFF] px-8 py-[14px] text-[13px] uppercase tracking-[0.1em] font-bold hover:bg-[#575757] transition-colors cursor-pointer"
+            className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-8 py-[14px] text-[13px] uppercase tracking-[0.1em] font-bold hover:bg-[var(--btn-hover)] transition-colors cursor-pointer"
           >
             TRY AGAIN
           </button>
@@ -186,7 +189,7 @@ const Products = () => {
   return (
     <section
       id="products-section"
-      className="section-wrapper w-full max-w-[1280px] mx-auto"
+      className="section-wrapper w-full max-w-[1280px] mx-auto min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]"
     >
       <div className="section-heading-container" data-aos="fade-up">
         <span className="section-label">OUR COLLECTION</span>
@@ -203,7 +206,7 @@ const Products = () => {
       />
 
       {!loading && (
-        <p className="text-[13px] text-[#757575] uppercase tracking-[0.1em] mb-6">
+        <p className="text-[13px] text-[var(--text-secondary)] uppercase tracking-[0.1em] mb-6">
           Showing {showingFrom}-{showingTo} of {filteredProducts.length}{" "}
           products
         </p>
@@ -216,16 +219,16 @@ const Products = () => {
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="py-24 text-center border border-[#E1E1E1]">
-          <h3 className="text-[20px] text-[#000000] uppercase tracking-[0.1em] font-bold mb-3">
+        <div className="py-24 text-center border border-[var(--border-color)]">
+          <h3 className="text-[20px] text-[var(--text-primary)] uppercase tracking-[0.1em] font-bold mb-3">
             NO PRODUCTS FOUND
           </h3>
-          <p className="text-[#757575] mb-8">
+          <p className="text-[var(--text-secondary)] mb-8">
             Try a different search term or category.
           </p>
           <button
             onClick={clearFilters}
-            className="border border-[#000000] bg-[#FFFFFF] text-[#000000] px-7 py-[13px] text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-[#000000] hover:text-[#FFFFFF] transition-all cursor-pointer"
+            className="border border-[var(--text-primary)] bg-[var(--bg-primary)] text-[var(--text-primary)] px-7 py-[13px] text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-[var(--btn-bg)] hover:text-[var(--btn-text)] transition-all cursor-pointer"
           >
             CLEAR FILTERS
           </button>
@@ -248,9 +251,9 @@ const Products = () => {
                 <article
                   key={product.id}
                   onClick={() => navigate(`/product/${product.id}`)}
-                  className="group cursor-pointer border border-[#E1E1E1] bg-[#FFFFFF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all"
+                  className="group cursor-pointer border border-[var(--border-color)] bg-[var(--bg-primary)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all"
                 >
-                  <div className="relative aspect-[3/4] bg-[#F5F5F5] overflow-hidden">
+                  <div className="relative aspect-[3/4] bg-[var(--bg-secondary)] overflow-hidden">
                     <img
                       src={product.image}
                       alt={product.title}
@@ -261,11 +264,11 @@ const Products = () => {
                       }}
                     />
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <span className="bg-[#000000] text-[#FFFFFF] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
+                      <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
                         {product.category}
                       </span>
                       {hasDiscount && (
-                        <span className="bg-[#000000] text-[#FFFFFF] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
+                        <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
                           SALE
                         </span>
                       )}
@@ -273,7 +276,7 @@ const Products = () => {
 
                     <button
                       onClick={(event) => toggleWishlist(event, product)}
-                      className="absolute top-3 right-3 text-[20px] text-[#000000] cursor-pointer"
+                      className="absolute top-3 right-3 text-[20px] text-[var(--text-primary)] cursor-pointer"
                       aria-label="Toggle wishlist"
                     >
                       {wishlistActive ? <GoHeartFill /> : <GoHeart />}
@@ -281,9 +284,9 @@ const Products = () => {
 
                     <button
                       onClick={(event) => handleAddToCart(event, product)}
-                      className={`absolute bottom-0 left-0 w-full py-[14px] text-[12px] font-bold uppercase tracking-[0.12em] text-[#FFFFFF] bg-[#000000] transform transition-all duration-300 cursor-pointer ${
+                      className={`absolute bottom-0 left-0 w-full py-[14px] text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--btn-text)] bg-[var(--btn-bg)] transform transition-all duration-300 cursor-pointer ${
                         addedItems[product.id]
-                          ? "translate-y-0 bg-[#575757]"
+                          ? "translate-y-0 bg-[var(--btn-hover)]"
                           : "translate-y-full group-hover:translate-y-0"
                       }`}
                     >
@@ -306,7 +309,7 @@ const Products = () => {
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: "#000000",
+                        color: "var(--text-primary)",
                         margin: "0 0 6px 0",
                         display: "-webkit-box",
                         WebkitLineClamp: 2,
@@ -328,8 +331,8 @@ const Products = () => {
                               key={`${product.id}-star-${index}`}
                               className={
                                 index < stars
-                                  ? "text-[#000000]"
-                                  : "text-[#E1E1E1]"
+                                  ? "text-[var(--text-primary)]"
+                                  : "text-[var(--border-color)]"
                               }
                             />
                           ))}
@@ -339,11 +342,11 @@ const Products = () => {
 
                     <div className="mt-auto pt-3 flex items-center gap-3">
                       {hasDiscount && (
-                        <span className="text-[12px] text-[#757575] line-through">
+                        <span className="text-[12px] text-[var(--text-secondary)] line-through">
                           ₹{originalPrice.toFixed(2)}
                         </span>
                       )}
-                      <span className="text-[15px] text-[#000000] font-bold">
+                      <span className="text-[15px] text-[var(--text-primary)] font-bold">
                         ₹{Number(product.price).toFixed(2)}
                       </span>
                     </div>
@@ -357,7 +360,7 @@ const Products = () => {
             <button
               onClick={() => jumpToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-2 border border-[#E1E1E1] text-[#000000] disabled:opacity-50 cursor-pointer"
+              className="px-3 py-2 border border-[var(--border-color)] text-[var(--text-primary)] disabled:opacity-50 cursor-pointer"
             >
               ←
             </button>
@@ -370,8 +373,8 @@ const Products = () => {
                   onClick={() => jumpToPage(page)}
                   className={`min-w-[36px] px-3 py-2 border text-[13px] uppercase tracking-[0.08em] cursor-pointer ${
                     active
-                      ? "bg-[#000000] text-[#FFFFFF] border-[#000000]"
-                      : "bg-[#FFFFFF] text-[#000000] border-[#E1E1E1] hover:bg-[#F5F5F5]"
+                      ? "bg-[var(--btn-bg)] text-[var(--btn-text)] border-[var(--text-primary)]"
+                      : "bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-color)] hover:bg-[var(--bg-secondary)]"
                   }`}
                 >
                   {page}
@@ -381,7 +384,7 @@ const Products = () => {
             <button
               onClick={() => jumpToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 border border-[#E1E1E1] text-[#000000] disabled:opacity-50 cursor-pointer"
+              className="px-3 py-2 border border-[var(--border-color)] text-[var(--text-primary)] disabled:opacity-50 cursor-pointer"
             >
               →
             </button>

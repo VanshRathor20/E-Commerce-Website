@@ -1,6 +1,38 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap");
 @import "tailwindcss";
 
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-card: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #757575;
+  --border-color: #e1e1e1;
+  --navbar-bg: #ffffff;
+  --btn-bg: #000000;
+  --btn-text: #ffffff;
+  --btn-hover: #575757;
+  --sale-bar-bg: #000000;
+  --sale-bar-text: #ffffff;
+  --overlay: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: #141414;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --border-color: #2a2a2a;
+  --navbar-bg: #0a0a0a;
+  --btn-bg: #ffffff;
+  --btn-text: #000000;
+  --btn-hover: #dddddd;
+  --sale-bar-bg: #ffffff;
+  --sale-bar-text: #000000;
+  --overlay: rgba(0, 0, 0, 0.8);
+}
+
 @theme {
   --color-fashion-white: #ffffff;
   --color-fashion-black: #000000;
@@ -15,8 +47,8 @@ html {
 html,
 body {
   font-family: "Inter", sans-serif;
-  background-color: #ffffff;
-  color: #757575;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
   line-height: 1.8;
   font-size: 15px;
 }
@@ -61,7 +93,7 @@ a {
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  color: #757575;
+  color: var(--text-secondary);
   letter-spacing: 0.35em;
   margin-bottom: 12px;
   display: block;
@@ -72,7 +104,7 @@ a {
   font-weight: 700;
   font-size: clamp(28px, 4vw, 48px);
   text-transform: uppercase;
-  color: #000000;
+  color: var(--text-primary);
   letter-spacing: 0.08em;
   margin-bottom: 16px;
 }
@@ -80,7 +112,7 @@ a {
 .section-underline {
   width: 40px;
   height: 2px;
-  background-color: #000000;
+  background-color: var(--text-primary);
   margin: 0 auto 48px auto;
 }
 
@@ -95,9 +127,25 @@ a {
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--border-color) 50%,
+    var(--bg-secondary) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes marquee {
@@ -136,7 +184,7 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 14px;
   height: 14px;
-  background: #000000;
+  background: var(--btn-bg);
   border-radius: 0;
   cursor: pointer;
 }
@@ -144,7 +192,7 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
   width: 14px;
   height: 14px;
-  background: #000000;
+  background: var(--btn-bg);
   border-radius: 0;
   cursor: pointer;
   border: none;

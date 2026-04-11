@@ -8,7 +8,7 @@ const Home = () => {
     <>
       <SaleStickyBar />
       <Banner />
-      <div className="w-full bg-[#FFFFFF]">
+      <div className="w-full min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <Products />
       </div>
     </>

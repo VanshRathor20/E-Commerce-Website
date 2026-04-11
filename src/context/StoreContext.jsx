@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
+import { useToast } from "../Components/Toast/ToastContext";
 
 const StoreContext = createContext();
 
@@ -137,7 +138,33 @@ const reducer = (state, action) => {
 };
 
 export const StoreProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
+  const { showToast } = useToast();
+  const [state, baseDispatch] = useReducer(reducer, undefined, getInitialState);
+
+  const dispatch = (action) => {
+    if (!action || !action.type) {
+      return;
+    }
+
+    switch (action.type) {
+      case "ADD_TO_CART":
+        showToast("Added to cart", "success");
+        break;
+      case "REMOVE_FROM_CART":
+        showToast("Removed from cart", "info");
+        break;
+      case "ADD_TO_WISHLIST":
+        showToast("Added to wishlist", "wishlist");
+        break;
+      case "REMOVE_FROM_WISHLIST":
+        showToast("Removed from wishlist", "info");
+        break;
+      default:
+        break;
+    }
+
+    baseDispatch(action);
+  };
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(state.cart));

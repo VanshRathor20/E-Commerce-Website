@@ -2,7 +2,7 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="w-full bg-[#FFFFFF]">
+    <div className="w-full bg-[var(--bg-primary)]">
       {/* Hero Banner */}
       <div
         style={{
@@ -89,7 +89,7 @@ const About = () => {
         <div className="max-w-5xl mx-auto flex flex-col items-center">
           <div className="flex flex-col md:flex-row gap-12 lg:gap-24 items-center mb-24">
             <div
-              className="flex-1 text-[#757575] leading-[1.8] text-[15px]"
+              className="flex-1 text-[var(--text-secondary)] leading-[1.8] text-[15px]"
               data-aos="fade-up"
             >
               <p className="mb-6">
@@ -112,7 +112,7 @@ const About = () => {
               </p>
             </div>
             <div
-              className="flex-1 w-full relative aspect-[3/4] overflow-hidden bg-[#F5F5F5]"
+              className="flex-1 w-full relative aspect-[3/4] overflow-hidden bg-[var(--bg-secondary)]"
               data-aos="fade-up"
               data-aos-delay="200"
             >
@@ -137,11 +137,11 @@ const About = () => {
             {["QUALITY", "STYLE", "SUSTAINABILITY"].map((val, idx) => (
               <div
                 key={idx}
-                className="border border-[#E1E1E1] p-[48px] flex items-center justify-center bg-[#FFFFFF] hover:bg-[#F9F9F9] transition-colors cursor-default"
+                className="border border-[var(--border-color)] p-[48px] flex items-center justify-center bg-[var(--bg-primary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-default"
                 data-aos="fade-up"
                 data-aos-delay={idx * 100}
               >
-                <h3 className="text-[#000000] font-bold uppercase tracking-[0.1em] text-[14px]">
+                <h3 className="text-[var(--text-primary)] font-bold uppercase tracking-[0.1em] text-[14px]">
                   {val}
                 </h3>
               </div>

@@ -2,9 +2,9 @@ import React from "react";
 
 const SaleStickyBar = () => {
   return (
-    <div className="bg-fashion-black w-full overflow-hidden relative z-40 border-b border-fashion-border">
-      <div className="bg-fashion-black py-3 marquee-track">
-        <p className="text-fashion-white uppercase tracking-[0.15em] text-[11px] sm:text-[12px] font-semibold whitespace-nowrap px-4">
+    <div className="bg-[var(--sale-bar-bg)] w-full overflow-hidden relative z-40 border-b border-[var(--border-color)]">
+      <div className="bg-[var(--sale-bar-bg)] py-3 marquee-track">
+        <p className="text-[var(--sale-bar-text)] uppercase tracking-[0.15em] text-[11px] sm:text-[12px] font-semibold whitespace-nowrap px-4">
           EXTRA 15% OFF ALL SALE ITEMS. USE CODE{" "}
           <span className="font-bold underline">FASHION15</span> AT CHECKOUT
           &nbsp; • &nbsp; FREE SHIPPING ON ALL ORDERS OVER $150 &nbsp; • &nbsp;

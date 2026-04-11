@@ -14,19 +14,19 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
   const handleGenerateQR = () => setShowQR(true);
 
   return (
-    <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 text-[#000000]">
-      <div className="bg-[#FFFFFF] p-[40px] w-[90vw] md:w-full max-w-[480px] text-center border border-[#E1E1E1] rounded-none">
-        <h1 className="text-[20px] font-bold mb-6 font-inter uppercase tracking-[0.1em] text-[#000000]">
+    <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 text-[var(--text-primary)]">
+      <div className="bg-[var(--bg-primary)] p-[40px] w-[90vw] md:w-full max-w-[480px] text-center border border-[var(--border-color)] rounded-none">
+        <h1 className="text-[20px] font-bold mb-6 font-inter uppercase tracking-[0.1em] text-[var(--text-primary)]">
           PLACE YOUR ORDER
         </h1>
-        <p className="mb-8 text-[14px] text-[#000000] font-bold">
+        <p className="mb-8 text-[14px] text-[var(--text-primary)] font-bold">
           TOTAL AMOUNT: ₹{total}
         </p>
 
         {!showQR && (
           <button
             onClick={handleGenerateQR}
-            className="bg-[#000000] hover:bg-[#575757] text-[#FFFFFF] px-6 py-[16px] rounded-none w-full cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-colors"
+            className="bg-[var(--btn-bg)] hover:bg-[var(--btn-hover)] text-[var(--btn-text)] px-6 py-[16px] rounded-none w-full cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-colors"
           >
             GENERATE PAYMENT QR
           </button>
@@ -43,7 +43,7 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
               style={{
                 display: "block",
                 margin: "0 auto",
-                border: "1px solid #E1E1E1",
+                border: "1px solid var(--border-color)",
               }}
               onError={(e) => {
                 e.target.onerror = null;
@@ -54,7 +54,7 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
               style={{
                 marginTop: "16px",
                 fontSize: "12px",
-                color: "#757575",
+                color: "var(--text-secondary)",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
               }}
@@ -65,7 +65,7 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
               style={{
                 marginTop: "4px",
                 fontSize: "11px",
-                color: "#757575",
+                color: "var(--text-secondary)",
               }}
             >
               Amount: ₹{total} | UPI: {upiId}
@@ -75,7 +75,7 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
 
         <button
           onClick={onClose}
-          className="border border-[#000000] bg-[#FFFFFF] hover:bg-[#000000] hover:text-[#FFFFFF] text-[#000000] px-6 py-[16px] rounded-none w-full mt-2 cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-all duration-300"
+          className="border border-[var(--text-primary)] bg-[var(--bg-primary)] hover:bg-[var(--btn-bg)] hover:text-[var(--btn-text)] text-[var(--text-primary)] px-6 py-[16px] rounded-none w-full mt-2 cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-all duration-300"
         >
           BACK TO HOME
         </button>

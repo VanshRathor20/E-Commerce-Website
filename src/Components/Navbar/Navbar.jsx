@@ -4,10 +4,11 @@ import { GoHeartFill, GoHeart } from "react-icons/go";
 import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { useStore } from "../../context/StoreContext";
 import { IoIosSearch } from "react-icons/io";
-
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const { state, dispatch } = useStore();
+  const { isDark, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,14 +66,14 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`bg-[#FFFFFF] sticky top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b border-[#E1E1E1] ${
+        className={`bg-[var(--navbar-bg)] sticky top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b border-[var(--border-color)] ${
           isScrolled ? "shadow-sm" : ""
         }`}
       >
         <nav className="h-[64px] flex items-center justify-between w-full mx-auto px-6 lg:px-12 relative">
           <Link
             to="/"
-            className="text-[#000000] font-[900] uppercase text-[18px] tracking-[0.08em] cursor-pointer whitespace-nowrap"
+            className="text-[var(--text-primary)] font-[900] uppercase text-[18px] tracking-[0.08em] cursor-pointer whitespace-nowrap"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             FASHION STORE
@@ -85,20 +86,20 @@ const Navbar = () => {
                 <a
                   key={link.name}
                   href="/"
-                  className="text-[12px] uppercase tracking-[0.12em] text-[#000000] hover:text-[#757575] transition-all duration-300 relative group font-[500]"
+                  className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-all duration-300 relative group font-[500]"
                   onClick={handleShopClick}
                 >
                   {link.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--btn-bg)] transition-all duration-300 group-hover:w-full"></span>
                 </a>
               ) : (
                 <Link
                   key={link.name}
                   to={link.path}
-                  className="text-[12px] uppercase tracking-[0.12em] text-[#000000] hover:text-[#757575] transition-all duration-300 relative group font-[500]"
+                  className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-all duration-300 relative group font-[500]"
                 >
                   {link.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--btn-bg)] transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               ),
             )}
@@ -140,13 +141,15 @@ const Navbar = () => {
                   style={{
                     width: "100%",
                     border: "none",
-                    borderBottom: "1px solid #000",
+                    borderBottom: "1px solid var(--text-primary)",
                     outline: "none",
                     fontSize: "12px",
                     letterSpacing: "0.1em",
                     padding: "4px 0",
                     fontFamily: "Inter, sans-serif",
                     textTransform: "uppercase",
+                    color: "var(--text-primary)",
+                    background: "transparent",
                   }}
                 />
               </div>
@@ -159,7 +162,7 @@ const Navbar = () => {
                   }
                   setSearchOpen(!searchOpen);
                 }}
-                className="text-[#000000] hover:text-[#757575] transition-colors duration-300"
+                className="text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors duration-300"
                 style={{
                   background: "none",
                   border: "none",
@@ -174,26 +177,44 @@ const Navbar = () => {
             </div>
 
             <button
-              className="relative text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors flex items-center stroke-[1.5]"
+              className="relative text-[20px] text-[var(--text-primary)] cursor-pointer hover:text-[var(--text-secondary)] transition-colors flex items-center stroke-[1.5]"
               onClick={() =>
                 dispatch({ type: "SET_PANEL", payload: "wishlist" })
               }
             >
               {state.wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
               {state.wishlist.length > 0 && (
-                <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
+                <span className="absolute -top-[8px] -right-[8px] bg-[var(--btn-bg)] border-2 border-[var(--btn-text)] rounded-full w-[18px] h-[18px] text-[var(--btn-text)] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
                   {state.wishlist.length}
                 </span>
               )}
             </button>
 
             <button
-              className={`relative text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-all duration-300 flex items-center stroke-[1.5] ${state.cartAddedPulse ? "scale-125" : "scale-100"}`}
+              onClick={toggleTheme}
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "16px",
+                padding: "4px",
+                color: "var(--text-primary)",
+                lineHeight: 1,
+                transition: "opacity 0.3s ease",
+              }}
+              aria-label="Toggle theme"
+            >
+              {isDark ? "☀" : "☾"}
+            </button>
+
+            <button
+              className={`relative text-[20px] text-[var(--text-primary)] cursor-pointer hover:text-[var(--text-secondary)] transition-all duration-300 flex items-center stroke-[1.5] ${state.cartAddedPulse ? "scale-125" : "scale-100"}`}
               onClick={() => dispatch({ type: "SET_PANEL", payload: "cart" })}
             >
               {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
               {totalItem > 0 && (
-                <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
+                <span className="absolute -top-[8px] -right-[8px] bg-[var(--btn-bg)] border-2 border-[var(--btn-text)] rounded-full w-[18px] h-[18px] text-[var(--btn-text)] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
                   {totalItem}
                 </span>
               )}
@@ -225,8 +246,8 @@ const Navbar = () => {
               top: "64px",
               left: 0,
               right: 0,
-              background: "#FFFFFF",
-              borderBottom: "1px solid #E1E1E1",
+              background: "var(--navbar-bg)",
+              borderBottom: "1px solid var(--border-color)",
               zIndex: 9998,
               padding: "16px 0",
             }}
@@ -243,9 +264,9 @@ const Navbar = () => {
                   fontWeight: 600,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "#000",
+                  color: "var(--text-primary)",
                   textDecoration: "none",
-                  borderBottom: "1px solid #F5F5F5",
+                  borderBottom: "1px solid var(--bg-secondary)",
                 }}
               >
                 {["SHOP", "COLLECTIONS", "ABOUT", "CONTACT"][i]}

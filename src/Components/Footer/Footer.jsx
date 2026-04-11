@@ -6,8 +6,10 @@ import {
   FaTwitter,
   FaPinterest,
 } from "react-icons/fa";
+import { useToast } from "../Toast/ToastContext";
 
 const Footer = () => {
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [msgType, setMsgType] = useState("");
@@ -26,6 +28,7 @@ const Footer = () => {
     }
     setMsg("Thank you for subscribing!");
     setMsgType("success");
+    showToast("Subscribed successfully!", "success");
     setEmail("");
     setTimeout(() => {
       setMsg("");
@@ -34,14 +37,14 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-[#FFFFFF] border-t border-[#E1E1E1] pt-[64px] pb-[32px] px-6 lg:px-12 mt-auto">
+    <footer className="w-full bg-[var(--bg-primary)] border-t border-[var(--border-color)] pt-[64px] pb-[32px] px-6 lg:px-12 mt-auto">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24 mb-[64px]">
         {/* Column 1 */}
         <div className="flex flex-col gap-6">
-          <h2 className="text-[#000000] font-[900] uppercase text-[18px] tracking-[0.08em]">
+          <h2 className="text-[var(--text-primary)] font-[900] uppercase text-[18px] tracking-[0.08em]">
             FASHION STORE
           </h2>
-          <p className="text-[#757575] italic text-[14px] leading-[1.8] max-w-sm">
+          <p className="text-[var(--text-secondary)] italic text-[14px] leading-[1.8] max-w-sm">
             Defining a lifestyle built around purposeful aesthetic choices and
             uncompromising quality.
           </p>
@@ -50,7 +53,7 @@ const Footer = () => {
               href="https://www.instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center text-[#757575] hover:text-[#000000] transition-colors duration-300"
+              className="flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
             >
               <FaInstagram size={20} />
             </a>
@@ -58,7 +61,7 @@ const Footer = () => {
               href="https://www.facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center text-[#757575] hover:text-[#000000] transition-colors duration-300"
+              className="flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
             >
               <FaFacebook size={20} />
             </a>
@@ -66,7 +69,7 @@ const Footer = () => {
               href="https://www.twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center text-[#757575] hover:text-[#000000] transition-colors duration-300"
+              className="flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
             >
               <FaTwitter size={20} />
             </a>
@@ -74,7 +77,7 @@ const Footer = () => {
               href="https://www.pinterest.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center text-[#757575] hover:text-[#000000] transition-colors duration-300"
+              className="flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-300"
             >
               <FaPinterest size={20} />
             </a>
@@ -83,10 +86,10 @@ const Footer = () => {
 
         {/* Column 2 */}
         <div className="flex flex-col gap-6">
-          <h3 className="text-[#000000] font-bold text-[13px] uppercase tracking-[0.1em]">
+          <h3 className="text-[var(--text-primary)] font-bold text-[13px] uppercase tracking-[0.1em]">
             QUICK LINKS
           </h3>
-          <ul className="flex flex-col gap-4 text-[#757575] text-[13px] uppercase tracking-widest">
+          <ul className="flex flex-col gap-4 text-[var(--text-secondary)] text-[13px] uppercase tracking-widest">
             {["SHOP", "COLLECTIONS", "ABOUT US", "CONTACT", "FAQ"].map(
               (link) => (
                 <li key={link}>
@@ -98,10 +101,10 @@ const Footer = () => {
                           ? "/faq"
                           : `/${link.replace(" US", "").toLowerCase()}`
                     }
-                    className="hover:text-[#000000] transition-colors relative group w-fit inline-block"
+                    className="hover:text-[var(--text-primary)] transition-colors relative group w-fit inline-block"
                   >
                     {link}
-                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#000000] transition-all duration-300 group-hover:w-full"></span>
+                    <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--btn-bg)] transition-all duration-300 group-hover:w-full"></span>
                   </Link>
                 </li>
               ),
@@ -111,10 +114,10 @@ const Footer = () => {
 
         {/* Column 3 */}
         <div className="flex flex-col gap-6">
-          <h3 className="text-[#000000] font-bold text-[13px] uppercase tracking-[0.1em]">
+          <h3 className="text-[var(--text-primary)] font-bold text-[13px] uppercase tracking-[0.1em]">
             JOIN OUR MAILING LIST
           </h3>
-          <p className="text-[#757575] text-[13px] leading-[1.6]">
+          <p className="text-[var(--text-secondary)] text-[13px] leading-[1.6]">
             Subscribe to receive updates, access to exclusive deals, and more.
           </p>
           <form
@@ -129,11 +132,11 @@ const Footer = () => {
               placeholder="ENTER YOUR EMAIL"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 border border-[#E1E1E1] p-[14px] outline-none focus:border-[#000000] text-[#000000] text-[12px] uppercase tracking-widest placeholder:text-[#757575] shadow-none rounded-none"
+              className="flex-1 border border-[var(--border-color)] p-[14px] outline-none focus:border-[var(--text-primary)] text-[var(--text-primary)] text-[12px] uppercase tracking-widest placeholder:text-[var(--text-secondary)] shadow-none rounded-none"
             />
             <button
               type="submit"
-              className="bg-[#000000] text-[#FFFFFF] px-6 py-[14px] font-bold uppercase tracking-[0.1em] text-[12px] hover:bg-[#575757] transition-colors border border-[#000000] min-w-[120px] rounded-none sm:ml-[-1px]"
+              className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-6 py-[14px] font-bold uppercase tracking-[0.1em] text-[12px] hover:bg-[var(--btn-hover)] transition-colors border border-[var(--text-primary)] min-w-[120px] rounded-none sm:ml-[-1px]"
             >
               SUBSCRIBE
             </button>
@@ -145,7 +148,7 @@ const Footer = () => {
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginTop: "8px",
-                color: msgType === "error" ? "#cc0000" : "#000000",
+                color: msgType === "error" ? "#cc0000" : "var(--text-primary)",
               }}
             >
               {msg}
@@ -155,15 +158,21 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="max-w-[1280px] mx-auto border-t border-[#E1E1E1] pt-[32px] text-center flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-[#757575] text-[12px] uppercase tracking-widest">
+      <div className="max-w-[1280px] mx-auto border-t border-[var(--border-color)] pt-[32px] text-center flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-[var(--text-secondary)] text-[12px] uppercase tracking-widest">
           &copy; {new Date().getFullYear()} FASHION STORE. ALL RIGHTS RESERVED.
         </p>
-        <div className="flex gap-6 text-[#757575] text-[12px] uppercase tracking-widest">
-          <a href="#" className="hover:text-[#000000] transition-colors">
+        <div className="flex gap-6 text-[var(--text-secondary)] text-[12px] uppercase tracking-widest">
+          <a
+            href="#"
+            className="hover:text-[var(--text-primary)] transition-colors"
+          >
             PRIVACY
           </a>
-          <a href="#" className="hover:text-[#000000] transition-colors">
+          <a
+            href="#"
+            className="hover:text-[var(--text-primary)] transition-colors"
+          >
             TERMS
           </a>
         </div>

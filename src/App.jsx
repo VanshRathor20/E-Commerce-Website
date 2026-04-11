@@ -44,7 +44,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-[#FFFFFF]">
+    <div className="flex flex-col min-h-screen relative bg-[var(--bg-primary)]">
       {showGlobalShell && <Navbar />}
 
       <main className="flex-1 animate-fade-in-up" key={location.pathname}>
@@ -77,8 +77,8 @@ const App = () => {
             zIndex: 99999,
             width: "44px",
             height: "44px",
-            backgroundColor: "#000000",
-            color: "#FFFFFF",
+            backgroundColor: "var(--btn-bg)",
+            color: "var(--btn-text)",
             border: "none",
             borderRadius: "0",
             cursor: "pointer",
@@ -89,8 +89,12 @@ const App = () => {
             boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
             transition: "background 0.3s ease",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#575757")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#000000")}
+          onMouseEnter={(e) =>
+            (e.target.style.backgroundColor = "var(--btn-hover)")
+          }
+          onMouseLeave={(e) =>
+            (e.target.style.backgroundColor = "var(--btn-bg)")
+          }
           aria-label="Back to top"
         >
           ↑

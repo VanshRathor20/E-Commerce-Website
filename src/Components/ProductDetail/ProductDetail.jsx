@@ -126,13 +126,13 @@ const ProductDetail = () => {
 
   if (error || !product) {
     return (
-      <div className="w-full min-h-[60vh] flex flex-col justify-center items-center bg-[#FFFFFF]">
-        <h2 className="text-[#000000] font-bold uppercase text-[24px] tracking-[0.1em] mb-4">
+      <div className="w-full min-h-[60vh] flex flex-col justify-center items-center bg-[var(--bg-primary)]">
+        <h2 className="text-[var(--text-primary)] font-bold uppercase text-[24px] tracking-[0.1em] mb-4">
           PRODUCT NOT FOUND
         </h2>
         <button
           onClick={() => navigate("/")}
-          className="text-[#000000] text-[13px] uppercase tracking-[0.1em] font-bold border-b-2 border-[#000000] pb-1 hover:text-[#757575] hover:border-[#757575] transition-colors cursor-pointer bg-transparent"
+          className="text-[var(--text-primary)] text-[13px] uppercase tracking-[0.1em] font-bold border-b-2 border-[var(--text-primary)] pb-1 hover:text-[var(--text-secondary)] hover:border-[var(--text-secondary)] transition-colors cursor-pointer bg-transparent"
         >
           ← BACK TO SHOP
         </button>
@@ -182,7 +182,7 @@ const ProductDetail = () => {
               width: "100%",
               aspectRatio: "3/4",
               overflow: "hidden",
-              border: "1px solid #E1E1E1",
+              border: "1px solid var(--border-color)",
             }}
           >
             <img
@@ -212,8 +212,8 @@ const ProductDetail = () => {
                   height: "72px",
                   border:
                     activeImage === index
-                      ? "2px solid #000000"
-                      : "1px solid #E1E1E1",
+                      ? "2px solid var(--text-primary)"
+                      : "1px solid var(--border-color)",
                   cursor: "pointer",
                   overflow: "hidden",
                   flexShrink: 0,
@@ -235,62 +235,62 @@ const ProductDetail = () => {
 
         {/* Right Col: Details */}
         <div className="w-full md:w-1/2 flex flex-col py-2">
-          <p className="text-[#757575] text-[12px] uppercase tracking-[0.15em] mb-4">
+          <p className="text-[var(--text-secondary)] text-[12px] uppercase tracking-[0.15em] mb-4">
             {product.category}
           </p>
-          <h1 className="text-[#000000] font-bold text-[32px] md:text-[40px] uppercase tracking-[0.05em] mb-6 leading-[1.1]">
+          <h1 className="text-[var(--text-primary)] font-bold text-[32px] md:text-[40px] uppercase tracking-[0.05em] mb-6 leading-[1.1]">
             {product.title}
           </h1>
 
-          <div className="flex items-center gap-1 text-[#000000] text-[14px] mb-6">
+          <div className="flex items-center gap-1 text-[var(--text-primary)] text-[14px] mb-6">
             {[...Array(5)].map((_, i) => (
               <AiFillStar
                 key={i}
                 className={
                   i < Math.round(product.rating || 0)
-                    ? "text-[#000000]"
-                    : "text-[#E1E1E1]"
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--border-color)]"
                 }
               />
             ))}
-            <span className="text-[#757575] text-[12px] ml-3 uppercase tracking-widest">
+            <span className="text-[var(--text-secondary)] text-[12px] ml-3 uppercase tracking-widest">
               ({Math.round((product.rating || 0) * 20)} rating)
             </span>
           </div>
 
           <div className="flex items-end gap-4 mb-8">
-            <span className="text-[#000000] font-bold text-[28px] leading-none">
+            <span className="text-[var(--text-primary)] font-bold text-[28px] leading-none">
               ₹{product.price.toFixed(2)}
             </span>
             {product.discountPercentage > 0 && (
               <div className="flex items-center gap-3 mb-1">
-                <span className="text-[#757575] text-[16px] line-through">
+                <span className="text-[var(--text-secondary)] text-[16px] line-through">
                   ₹{oldPrice.toFixed(2)}
                 </span>
-                <span className="bg-[#000000] text-[#FFFFFF] text-[10px] uppercase font-bold tracking-[0.1em] px-[8px] py-[4px] rounded-none">
+                <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] text-[10px] uppercase font-bold tracking-[0.1em] px-[8px] py-[4px] rounded-none">
                   SAVE {Math.round(product.discountPercentage)}%
                 </span>
               </div>
             )}
           </div>
 
-          <div className="w-full h-[1px] bg-[#E1E1E1] mb-8"></div>
+          <div className="w-full h-[1px] bg-[var(--border-color)] mb-8"></div>
 
-          <p className="text-[#757575] leading-[1.8] text-[15px] mb-8">
+          <p className="text-[var(--text-secondary)] leading-[1.8] text-[15px] mb-8">
             {product.description ||
               "Crafted for everyday style with premium comfort and timeless fashion-store detailing."}
           </p>
 
           <div className="flex flex-col gap-3 mb-10">
-            <p className="text-[#757575] text-[13px] uppercase tracking-widest">
+            <p className="text-[var(--text-secondary)] text-[13px] uppercase tracking-widest">
               IN STOCK:{" "}
-              <span className="text-[#000000] font-bold">
+              <span className="text-[var(--text-primary)] font-bold">
                 {product.stock || 12} UNITS
               </span>
             </p>
-            <p className="text-[#757575] text-[13px] uppercase tracking-widest">
+            <p className="text-[var(--text-secondary)] text-[13px] uppercase tracking-widest">
               BRAND:{" "}
-              <span className="text-[#000000] font-bold">
+              <span className="text-[var(--text-primary)] font-bold">
                 {product.brand ||
                   product.source?.toUpperCase() ||
                   "FASHION STORE"}
@@ -302,18 +302,18 @@ const ProductDetail = () => {
           <div className="flex flex-col gap-4">
             <div className="flex gap-4 h-[56px]">
               {/* Quantity */}
-              <div className="flex w-[140px] border border-[#E1E1E1]">
+              <div className="flex w-[140px] border border-[var(--border-color)]">
                 <button
-                  className="w-1/3 text-[#000000] flex items-center justify-center hover:bg-[#F9F9F9] cursor-pointer transition-colors"
+                  className="w-1/3 text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 >
                   −
                 </button>
-                <div className="w-1/3 flex items-center justify-center text-[#000000] text-[14px] font-bold border-l border-r border-[#E1E1E1]">
+                <div className="w-1/3 flex items-center justify-center text-[var(--text-primary)] text-[14px] font-bold border-l border-r border-[var(--border-color)]">
                   {quantity}
                 </div>
                 <button
-                  className="w-1/3 text-[#000000] flex items-center justify-center hover:bg-[#F9F9F9] cursor-pointer transition-colors"
+                  className="w-1/3 text-[var(--text-primary)] flex items-center justify-center hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
                   onClick={() =>
                     setQuantity(Math.min(product.stock || 99, quantity + 1))
                   }
@@ -324,7 +324,7 @@ const ProductDetail = () => {
 
               {/* Add to Cart */}
               <button
-                className={`flex-1 bg-[#000000] border border-[#000000] text-[#FFFFFF] text-[13px] font-bold uppercase tracking-[0.1em] rounded-none transition-all duration-300 cursor-pointer flex items-center justify-center ${added ? "bg-[#575757]" : "hover:bg-[#575757]"}`}
+                className={`flex-1 bg-[var(--btn-bg)] border border-[var(--text-primary)] text-[var(--btn-text)] text-[13px] font-bold uppercase tracking-[0.1em] rounded-none transition-all duration-300 cursor-pointer flex items-center justify-center ${added ? "bg-[var(--btn-hover)]" : "hover:bg-[var(--btn-hover)]"}`}
                 onClick={handleAddToCart}
               >
                 {added ? "✓ ADDED" : "ADD TO CART"}
@@ -333,7 +333,7 @@ const ProductDetail = () => {
 
             {/* Add to Wishlist */}
             <button
-              className="w-full h-[56px] border border-[#000000] bg-[#FFFFFF] text-[#000000] text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-[#000000] hover:text-[#FFFFFF] transition-all duration-300 rounded-none flex items-center justify-center gap-3 cursor-pointer"
+              className="w-full h-[56px] border border-[var(--text-primary)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-[var(--btn-bg)] hover:text-[var(--btn-text)] transition-all duration-300 rounded-none flex items-center justify-center gap-3 cursor-pointer"
               onClick={() => {
                 if (isInWishlist) {
                   dispatch({
@@ -357,15 +357,16 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          <div className="w-full h-[1px] bg-[#E1E1E1] mt-12 mb-8"></div>
+          <div className="w-full h-[1px] bg-[var(--border-color)] mt-12 mb-8"></div>
 
           <div className="flex flex-col gap-4">
-            <h4 className="text-[#000000] text-[13px] font-bold uppercase tracking-widest mb-1">
+            <h4 className="text-[var(--text-primary)] text-[13px] font-bold uppercase tracking-widest mb-1">
               PRODUCT DETAILS
             </h4>
-            <ul className="text-[#757575] text-[14px] flex flex-col gap-3">
+            <ul className="text-[var(--text-secondary)] text-[14px] flex flex-col gap-3">
               <li>
-                • SKU: <span className="text-[#000000]">{product.id}</span>
+                • SKU:{" "}
+                <span className="text-[var(--text-primary)]">{product.id}</span>
               </li>
               <li>• Standard warranty and quality assurance included.</li>
               <li>• Estimated shipping in 3-5 business days.</li>

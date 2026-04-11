@@ -17,7 +17,7 @@ const Filters = ({
 
   return (
     <div className="mb-10 overflow-x-auto scroll">
-      <div className="inline-flex items-end min-w-max gap-6 border-b border-[#E1E1E1] pb-4">
+      <div className="inline-flex items-end min-w-max gap-6 border-b border-[var(--border-color)] pb-4">
         <div className="inline-flex items-center gap-6">
           {tabs.map((tab) => {
             const isActive = activeCategory === tab;
@@ -27,20 +27,20 @@ const Filters = ({
                 onClick={() => setActiveCategory(tab)}
                 className={`group relative pb-2 text-[12px] uppercase tracking-[0.12em] transition-colors cursor-pointer ${
                   isActive
-                    ? "text-[#000000] font-bold border-b-2 border-[#000000]"
-                    : "text-[#757575] hover:text-[#575757]"
+                    ? "text-[var(--text-primary)] font-bold border-b-2 border-[var(--text-primary)]"
+                    : "text-[var(--text-secondary)] hover:text-[#575757]"
                 }`}
               >
                 {tab}
                 {!isActive && (
-                  <span className="absolute left-0 -bottom-[2px] h-[2px] w-0 bg-[#000000] transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute left-0 -bottom-[2px] h-[2px] w-0 bg-[var(--btn-bg)] transition-all duration-300 group-hover:w-full" />
                 )}
               </button>
             );
           })}
         </div>
 
-        <div className="w-px h-8 bg-[#E1E1E1]" />
+        <div className="w-px h-8 bg-[var(--border-color)]" />
 
         <div className="inline-flex items-end gap-2">
           <div style={{ width: "320px" }}>
@@ -56,7 +56,7 @@ const Filters = ({
                 style={{
                   fontSize: "11px",
                   letterSpacing: "0.12em",
-                  color: "#757575",
+                  color: "var(--text-secondary)",
                   textTransform: "uppercase",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
@@ -69,7 +69,7 @@ const Filters = ({
                 style={{
                   fontSize: "11px",
                   fontWeight: 600,
-                  color: "#000000",
+                  color: "var(--text-primary)",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
                   minWidth: "80px",
@@ -89,7 +89,7 @@ const Filters = ({
                 style={{
                   width: "140px",
                   flexShrink: 0,
-                  accentColor: "#000000",
+                  accentColor: "var(--btn-bg)",
                   cursor: "pointer",
                   height: "2px",
                   margin: "0",
@@ -99,7 +99,7 @@ const Filters = ({
               <span
                 style={{
                   fontSize: "11px",
-                  color: "#757575",
+                  color: "var(--text-secondary)",
                   whiteSpace: "nowrap",
                   flexShrink: 0,
                 }}
@@ -112,7 +112,7 @@ const Filters = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="border border-[#E1E1E1] px-4 py-[10px] text-[13px] uppercase tracking-[0.08em] text-[#000000] bg-[#FFFFFF] focus:outline-none"
+            className="border border-[var(--border-color)] px-4 py-[10px] text-[13px] uppercase tracking-[0.08em] text-[var(--text-primary)] bg-[var(--bg-primary)] focus:outline-none"
           >
             <option value="default">Default</option>
             <option value="low-high">Price: Low to High</option>

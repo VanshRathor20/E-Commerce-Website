@@ -28,7 +28,7 @@ const Collections = () => {
   ];
 
   return (
-    <div className="w-full bg-[#FFFFFF] min-h-screen pb-24">
+    <div className="w-full bg-[var(--bg-primary)] min-h-screen pb-24">
       {/* Hero Banner */}
       <div
         style={{
@@ -117,7 +117,7 @@ const Collections = () => {
           {collections.map((cat, idx) => (
             <div
               key={idx}
-              className="relative aspect-[3/4] overflow-hidden group cursor-pointer bg-[#F5F5F5]"
+              className="relative aspect-[3/4] overflow-hidden group cursor-pointer bg-[var(--bg-secondary)]"
               onClick={() => navigate(`/?category=${cat.category}`)}
               data-aos="fade-up"
               data-aos-delay={idx * 100}
@@ -129,10 +129,10 @@ const Collections = () => {
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-all duration-500" />
               <div className="absolute inset-x-0 bottom-10 text-center transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                <h3 className="text-[#FFFFFF] uppercase tracking-[0.2em] font-bold text-[14px] mb-2">
+                <h3 className="text-[var(--btn-text)] uppercase tracking-[0.2em] font-bold text-[14px] mb-2">
                   {cat.title}
                 </h3>
-                <p className="text-[#FFFFFF] text-[12px] tracking-[0.1em] uppercase opacity-90">
+                <p className="text-[var(--btn-text)] text-[12px] tracking-[0.1em] uppercase opacity-90">
                   {cat.subtitle}
                 </p>
               </div>

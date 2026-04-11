@@ -19,20 +19,20 @@ const Cart = () => {
 
       {/* Side Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-[#FFFFFF] border-l border-[#E1E1E1] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto ${
-          activePanel === "cart" 
-            ? "translate-y-0 sm:translate-x-0" 
+        className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-[var(--bg-primary)] border-l border-[var(--border-color)] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto ${
+          activePanel === "cart"
+            ? "translate-y-0 sm:translate-x-0"
             : "translate-y-full sm:translate-y-0 sm:translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-5 border-b border-[#E1E1E1]">
-          <h3 className="font-bold text-[14px] text-[#000000] uppercase tracking-[0.1em]">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-[var(--border-color)]">
+          <h3 className="font-bold text-[14px] text-[var(--text-primary)] uppercase tracking-[0.1em]">
             Your Cart
           </h3>
           <button
             onClick={closePanel}
-            className="text-[#000000] hover:text-[#757575] transition-colors text-[20px] cursor-pointer bg-transparent border-none"
+            className="text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors text-[20px] cursor-pointer bg-transparent border-none"
           >
             <HiX />
           </button>
@@ -42,16 +42,16 @@ const Cart = () => {
         <div className="flex-1 overflow-y-auto scroll">
           {cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-4 px-6">
-              <HiOutlineShoppingBag className="text-[48px] text-[#E1E1E1] stroke-[1.0]" />
-              <p className="text-[#000000] text-[18px] uppercase tracking-[0.1em] font-bold">
+              <HiOutlineShoppingBag className="text-[48px] text-[var(--border-color)] stroke-[1.0]" />
+              <p className="text-[var(--text-primary)] text-[18px] uppercase tracking-[0.1em] font-bold">
                 YOUR CART IS EMPTY
               </p>
-              <p className="text-[#757575] text-[15px] mb-4">
+              <p className="text-[var(--text-secondary)] text-[15px] mb-4">
                 Looks like you haven't added anything yet.
               </p>
               <button
                 onClick={closePanel}
-                className="bg-[#000000] text-[#FFFFFF] px-8 py-[16px] rounded-none uppercase tracking-[0.1em] text-[13px] font-bold hover:bg-[#575757] transition-all duration-300"
+                className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-8 py-[16px] rounded-none uppercase tracking-[0.1em] text-[13px] font-bold hover:bg-[var(--btn-hover)] transition-all duration-300"
               >
                 CONTINUE SHOPPING
               </button>
@@ -60,10 +60,10 @@ const Cart = () => {
             cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 bg-[#FFFFFF] px-6 py-4 border-b border-[#E1E1E1] hover:bg-[#F9F9F9] transition-colors"
+                className="flex items-center gap-4 bg-[var(--bg-primary)] px-6 py-4 border-b border-[var(--border-color)] hover:bg-[var(--bg-secondary)] transition-colors"
               >
                 {/* Cart Image */}
-                <div className="w-[72px] h-[72px] border border-[#E1E1E1] flex-shrink-0 bg-[#F5F5F5] flex items-center justify-center relative overflow-hidden">
+                <div className="w-[72px] h-[72px] border border-[var(--border-color)] flex-shrink-0 bg-[var(--bg-secondary)] flex items-center justify-center relative overflow-hidden">
                   {item.thumbnail || item.image ? (
                     <img
                       src={item.thumbnail || item.image}
@@ -76,22 +76,26 @@ const Cart = () => {
                     />
                   ) : null}
                   <div
-                    className="absolute inset-0 bg-[#F5F5F5] items-center justify-center"
-                    style={{ display: (item.thumbnail || item.image) ? "none" : "flex" }}
+                    className="absolute inset-0 bg-[var(--bg-secondary)] items-center justify-center"
+                    style={{
+                      display: item.thumbnail || item.image ? "none" : "flex",
+                    }}
                   >
-                    <HiOutlineShoppingBag className="text-[#E1E1E1] text-[24px]" />
+                    <HiOutlineShoppingBag className="text-[var(--border-color)] text-[24px]" />
                   </div>
                 </div>
 
                 {/* Product Details */}
                 <div className="flex-1 flex flex-col gap-1">
                   <div className="flex justify-between items-start">
-                    <h4 className="font-bold text-[#000000] text-[13px] uppercase tracking-[0.1em] leading-[1.4]">
+                    <h4 className="font-bold text-[var(--text-primary)] text-[13px] uppercase tracking-[0.1em] leading-[1.4]">
                       {item.title || item.name}
                     </h4>
                     <button
-                      className="text-[#000000] hover:text-[#757575] transition-colors cursor-pointer text-[16px] ml-4 shrink-0"
-                      onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: item.id })}
+                      className="text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors cursor-pointer text-[16px] ml-4 shrink-0"
+                      onClick={() =>
+                        dispatch({ type: "REMOVE_FROM_CART", payload: item.id })
+                      }
                       aria-label="Remove item"
                     >
                       <HiX />
@@ -101,30 +105,45 @@ const Cart = () => {
                   <div className="flex justify-between items-end mt-2">
                     <div className="flex items-center">
                       <button
-                        className="w-7 h-7 border border-[#E1E1E1] text-[#000000] flex justify-center items-center cursor-pointer hover:bg-[#F9F9F9] transition-all duration-300 flex-shrink-0 rounded-none"
+                        className="w-7 h-7 border border-[var(--border-color)] text-[var(--text-primary)] flex justify-center items-center cursor-pointer hover:bg-[var(--bg-secondary)] transition-all duration-300 flex-shrink-0 rounded-none"
                         onClick={() => {
                           if (item.quantity > 1) {
-                            dispatch({ type: "UPDATE_QUANTITY", payload: { id: item.id, quantity: item.quantity - 1 }});
+                            dispatch({
+                              type: "UPDATE_QUANTITY",
+                              payload: {
+                                id: item.id,
+                                quantity: item.quantity - 1,
+                              },
+                            });
                           } else {
-                            dispatch({ type: "REMOVE_FROM_CART", payload: item.id });
+                            dispatch({
+                              type: "REMOVE_FROM_CART",
+                              payload: item.id,
+                            });
                           }
                         }}
                       >
                         <HiMinus />
                       </button>
-                      <span className="w-10 text-center text-[13px] text-[#000000] font-semibold">
+                      <span className="w-10 text-center text-[13px] text-[var(--text-primary)] font-semibold">
                         {item.quantity}
                       </span>
                       <button
-                        className="w-7 h-7 border border-[#E1E1E1] text-[#000000] flex justify-center items-center cursor-pointer hover:bg-[#F9F9F9] transition-all duration-300 flex-shrink-0 rounded-none"
+                        className="w-7 h-7 border border-[var(--border-color)] text-[var(--text-primary)] flex justify-center items-center cursor-pointer hover:bg-[var(--bg-secondary)] transition-all duration-300 flex-shrink-0 rounded-none"
                         onClick={() => {
-                          dispatch({ type: "UPDATE_QUANTITY", payload: { id: item.id, quantity: item.quantity + 1 }});
+                          dispatch({
+                            type: "UPDATE_QUANTITY",
+                            payload: {
+                              id: item.id,
+                              quantity: item.quantity + 1,
+                            },
+                          });
                         }}
                       >
                         <HiPlus />
                       </button>
                     </div>
-                    <span className="text-[14px] font-bold text-[#000000]">
+                    <span className="text-[14px] font-bold text-[var(--text-primary)]">
                       ₹{(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
@@ -136,45 +155,50 @@ const Cart = () => {
 
         {/* Footer Area */}
         {cart.length > 0 && (
-          <div className="p-6 border-t border-[#E1E1E1] bg-[#FFFFFF] flex flex-col gap-4">
+          <div className="p-6 border-t border-[var(--border-color)] bg-[var(--bg-primary)] flex flex-col gap-4">
             <div className="flex justify-between items-center text-[13px]">
-              <span className="text-[#000000] font-bold uppercase tracking-[0.1em]">
+              <span className="text-[var(--text-primary)] font-bold uppercase tracking-[0.1em]">
                 SUBTOTAL
               </span>
-              <span className="text-[#000000] font-bold">
+              <span className="text-[var(--text-primary)] font-bold">
                 ₹
                 {cart
-                  .reduce((total, item) => total + item.price * item.quantity, 0)
+                  .reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0,
+                  )
                   .toFixed(2)}
               </span>
             </div>
 
-            <div className="flex justify-between items-center text-[13px] pb-4 border-b border-[#E1E1E1]">
-              <span className="text-[#757575] uppercase tracking-[0.1em]">
+            <div className="flex justify-between items-center text-[13px] pb-4 border-b border-[var(--border-color)]">
+              <span className="text-[var(--text-secondary)] uppercase tracking-[0.1em]">
                 SHIPPING & HANDLING
               </span>
-              <span className="text-[#000000] font-bold">₹50.00</span>
+              <span className="text-[var(--text-primary)] font-bold">
+                ₹50.00
+              </span>
             </div>
 
             <div className="flex justify-between items-center mb-2 mt-1">
-              <span className="text-[#000000] font-bold text-[14px] uppercase tracking-[0.1em]">
+              <span className="text-[var(--text-primary)] font-bold text-[14px] uppercase tracking-[0.1em]">
                 ORDER TOTAL
               </span>
-              <span className="text-[#000000] font-bold text-[16px]">
+              <span className="text-[var(--text-primary)] font-bold text-[16px]">
                 ₹
                 {(
                   cart.reduce(
                     (total, item) => total + item.price * item.quantity,
-                    0
+                    0,
                   ) + 50
                 ).toFixed(2)}
               </span>
             </div>
 
             <button
-              className="w-full bg-[#000000] text-[#FFFFFF] font-bold uppercase tracking-[0.1em] text-[13px] py-[16px] rounded-none cursor-pointer hover:bg-[#575757] transition-all duration-300"
+              className="w-full bg-[var(--btn-bg)] text-[var(--btn-text)] font-bold uppercase tracking-[0.1em] text-[13px] py-[16px] rounded-none cursor-pointer hover:bg-[var(--btn-hover)] transition-all duration-300"
               onClick={() => {
-                dispatch({ type: 'SET_PANEL', payload: 'summary' });
+                dispatch({ type: "SET_PANEL", payload: "summary" });
               }}
             >
               PROCEED TO CHECKOUT
