@@ -24,7 +24,7 @@ const Products = () => {
   const [isFatalError, setIsFatalError] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 500 });
+  const [maxPrice, setMaxPrice] = useState(0);
   const [addedItems, setAddedItems] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -79,7 +79,7 @@ const Products = () => {
     const next = allProducts
       .filter((p) => matchesCategory(p.category, activeCategory))
       .filter((p) => p.title.toLowerCase().includes(query))
-      .filter((p) => p.price >= priceRange.min && p.price <= priceRange.max)
+      .filter((p) => maxPrice === 0 || p.price <= maxPrice)
       .sort((a, b) => {
         if (sortBy === "low-high") return a.price - b.price;
         if (sortBy === "high-low") return b.price - a.price;
@@ -88,11 +88,11 @@ const Products = () => {
         return 0;
       });
     return next;
-  }, [allProducts, activeCategory, searchQuery, sortBy, priceRange]);
+  }, [allProducts, activeCategory, searchQuery, sortBy, maxPrice]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, searchQuery, sortBy, priceRange]);
+  }, [activeCategory, searchQuery, sortBy, maxPrice]);
 
   const totalPages = Math.max(
     1,
@@ -139,7 +139,7 @@ const Products = () => {
   const clearFilters = () => {
     setActiveCategory("all");
     setSortBy("default");
-    setPriceRange({ min: 0, max: 500 });
+    setMaxPrice(0);
     dispatch({ type: "SET_SEARCH_QUERY", payload: "" });
   };
 
@@ -186,7 +186,7 @@ const Products = () => {
         setActiveCategory={setActiveCategory}
         sortBy={sortBy}
         setSortBy={setSortBy}
-        onPriceChange={setPriceRange}
+        onPriceChange={setMaxPrice}
       />
 
       {!loading && (
