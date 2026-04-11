@@ -15,6 +15,7 @@ const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const inputRef = useRef(null);
 
   const location = useLocation();
@@ -36,6 +37,11 @@ const Navbar = () => {
       inputRef.current.focus();
     }
   }, [searchOpen]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setMobileSearchOpen(false);
+  }, [location.pathname]);
 
   const onSearch = (value) => {
     dispatch({ type: "SET_SEARCH_QUERY", payload: value });
@@ -221,33 +227,95 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Actions */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            style={{
-              display: "none",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "22px",
-              padding: "4px",
-            }}
-            className="mobile-menu-btn"
-            aria-label="Toggle mobile menu"
-          >
-            {mobileOpen ? "✕" : "☰"}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setMobileSearchOpen((prev) => !prev)}
+              className="text-[20px] text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors duration-300 flex items-center"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+              aria-label="Toggle mobile search"
+            >
+              {mobileSearchOpen ? "✕" : <IoIosSearch />}
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              className="text-[20px] text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors duration-300 flex items-center"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+              aria-label="Toggle theme"
+            >
+              {isDark ? <GoSun /> : <FaRegMoon />}
+            </button>
+
+            <button
+              onClick={() => setMobileOpen((prev) => !prev)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "22px",
+                padding: "4px",
+                color: "var(--text-primary)",
+              }}
+              aria-label="Toggle mobile menu"
+            >
+              {mobileOpen ? "✕" : "☰"}
+            </button>
+          </div>
         </nav>
 
-        {mobileOpen && (
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out border-b border-[var(--border-color)] ${
+            mobileSearchOpen
+              ? "max-h-[90px] opacity-100"
+              : "max-h-0 opacity-0 border-b-0"
+          }`}
+          style={{
+            background: "var(--navbar-bg)",
+          }}
+        >
+          <div className="px-6 py-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                onSearch(e.target.value);
+              }}
+              placeholder="SEARCH PRODUCTS..."
+              className="w-full border border-[var(--border-color)] bg-transparent text-[var(--text-primary)] text-[12px] uppercase tracking-[0.1em] px-4 py-3 outline-none focus:border-[var(--text-primary)] rounded-none"
+            />
+          </div>
+        </div>
+
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileOpen
+              ? "max-h-[340px] opacity-100"
+              : "max-h-0 opacity-0 pointer-events-none"
+          }`}
+          style={{
+            position: "absolute",
+            top: mobileSearchOpen ? "154px" : "64px",
+            left: 0,
+            right: 0,
+            background: "var(--navbar-bg)",
+            borderBottom: "1px solid var(--border-color)",
+            zIndex: 9998,
+          }}
+        >
           <div
             style={{
-              position: "absolute",
-              top: "64px",
-              left: 0,
-              right: 0,
-              background: "var(--navbar-bg)",
-              borderBottom: "1px solid var(--border-color)",
-              zIndex: 9998,
               padding: "16px 0",
             }}
           >
@@ -272,7 +340,7 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-        )}
+        </div>
       </header>
     </>
   );
