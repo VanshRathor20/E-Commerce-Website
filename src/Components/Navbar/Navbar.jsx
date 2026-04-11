@@ -5,6 +5,8 @@ import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { useStore } from "../../context/StoreContext";
 import { IoIosSearch } from "react-icons/io";
 import { useTheme } from "../../context/ThemeContext";
+import { FaRegMoon } from "react-icons/fa";
+import { GoSun } from "react-icons/go";
 
 const Navbar = () => {
   const { state, dispatch } = useStore();
@@ -191,24 +193,6 @@ const Navbar = () => {
             </button>
 
             <button
-              onClick={toggleTheme}
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "16px",
-                padding: "4px",
-                color: "var(--text-primary)",
-                lineHeight: 1,
-                transition: "opacity 0.3s ease",
-              }}
-              aria-label="Toggle theme"
-            >
-              {isDark ? "☀" : "☾"}
-            </button>
-
-            <button
               className={`relative text-[20px] text-[var(--text-primary)] cursor-pointer hover:text-[var(--text-secondary)] transition-all duration-300 flex items-center stroke-[1.5] ${state.cartAddedPulse ? "scale-125" : "scale-100"}`}
               onClick={() => dispatch({ type: "SET_PANEL", payload: "cart" })}
             >
@@ -218,6 +202,21 @@ const Navbar = () => {
                   {totalItem}
                 </span>
               )}
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              className="text-[20px] text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors duration-300 flex items-center"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+              aria-label="Toggle theme"
+            >
+              {isDark ? <GoSun /> : <FaRegMoon />}
             </button>
           </div>
 
