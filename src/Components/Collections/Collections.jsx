@@ -22,7 +22,7 @@ const Collections = () => {
       title: "FRAGRANCE",
       subtitle: "Perfumes & Scents",
       image:
-        "https://images.unsplash.com/photo-1541643600914-78b084683702?w=800",
+        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800&auto=format&fit=crop",
       category: "fragrance",
     },
   ];
@@ -30,14 +30,79 @@ const Collections = () => {
   return (
     <div className="w-full bg-[#FFFFFF] min-h-screen pb-24">
       {/* Hero Banner */}
-      <div className="w-full h-[400px] bg-[#000000] flex flex-col items-center justify-center text-center">
-        <div className="w-[60px] h-[1px] bg-[#FFFFFF] mb-6"></div>
-        <h1 className="text-[#FFFFFF] uppercase tracking-[0.12em] text-[clamp(40px,6vw,80px)] font-bold">
-          OUR COLLECTIONS
-        </h1>
-        <p className="text-[13px] tracking-[0.25em] text-[rgba(255,255,255,0.6)] mt-4 uppercase font-[500]">
-          EXPLORE OUR CURATED EDIT
-        </p>
+      <div
+        style={{
+          width: "100%",
+          height: "420px",
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1600&q=80)",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* Dark overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.50)",
+          }}
+        />
+
+        {/* Text content */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            textAlign: "center",
+            color: "#FFFFFF",
+            padding: "0 24px",
+          }}
+        >
+          {/* Top decorative line */}
+          <div
+            style={{
+              width: "40px",
+              height: "1px",
+              background: "rgba(255,255,255,0.6)",
+              margin: "0 auto 20px",
+            }}
+          />
+
+          {/* Main heading */}
+          <h1
+            style={{
+              fontSize: "clamp(36px, 6vw, 72px)",
+              fontWeight: 900,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#FFFFFF",
+              margin: 0,
+              lineHeight: 1.1,
+            }}
+          >
+            OUR COLLECTIONS
+          </h1>
+
+          {/* Subtitle */}
+          <p
+            style={{
+              fontSize: "12px",
+              letterSpacing: "0.3em",
+              color: "rgba(255,255,255,0.65)",
+              marginTop: "16px",
+              textTransform: "uppercase",
+              fontWeight: 400,
+            }}
+          >
+            EXPLORE OUR CURATED EDIT
+          </p>
+        </div>
       </div>
 
       {/* Category Cards */}

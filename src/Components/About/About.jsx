@@ -7,58 +7,71 @@ const About = () => {
       <div
         style={{
           width: "100%",
-          height: "300px",
+          height: "380px",
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600)",
+            "url(https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=80)",
           backgroundSize: "cover",
-          backgroundPosition: "center top",
+          backgroundPosition: "center 20%",
+          backgroundRepeat: "no-repeat",
           position: "relative",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
+        {/* Dark overlay */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: "rgba(0,0,0,0.55)",
+            background: "rgba(0,0,0,0.45)",
           }}
         />
+
+        {/* Text content */}
         <div
           style={{
             position: "relative",
             zIndex: 1,
             textAlign: "center",
             color: "#FFFFFF",
+            padding: "0 24px",
           }}
         >
+          {/* Top decorative line */}
           <div
             style={{
               width: "40px",
               height: "1px",
-              background: "#FFFFFF",
+              background: "rgba(255,255,255,0.6)",
               margin: "0 auto 20px",
             }}
           />
+
+          {/* Main heading */}
           <h1
             style={{
-              fontSize: "clamp(36px,6vw,64px)",
+              fontSize: "clamp(36px, 6vw, 72px)",
               fontWeight: 900,
-              letterSpacing: "0.12em",
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
+              color: "#FFFFFF",
               margin: 0,
+              lineHeight: 1.1,
             }}
           >
             OUR STORY
           </h1>
+
+          {/* Subtitle */}
           <p
             style={{
               fontSize: "12px",
               letterSpacing: "0.3em",
               color: "rgba(255,255,255,0.65)",
-              marginTop: "12px",
+              marginTop: "16px",
               textTransform: "uppercase",
+              fontWeight: 400,
             }}
           >
             CRAFTED WITH PURPOSE
