@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaFacebook,
@@ -8,6 +8,31 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const [msgType, setMsgType] = useState("");
+
+  const handleSubscribe = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      setMsg("Please enter your email address.");
+      setMsgType("error");
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setMsg("Please enter a valid email address.");
+      setMsgType("error");
+      return;
+    }
+    setMsg("Thank you for subscribing!");
+    setMsgType("success");
+    setEmail("");
+    setTimeout(() => {
+      setMsg("");
+      setMsgType("");
+    }, 3000);
+  };
+
   return (
     <footer className="w-full bg-[#FFFFFF] border-t border-[#E1E1E1] pt-[64px] pb-[32px] px-6 lg:px-12 mt-auto">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24 mb-[64px]">
@@ -94,13 +119,17 @@ const Footer = () => {
           </p>
           <form
             className="flex flex-col sm:flex-row gap-0 w-full mt-2"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubscribe();
+            }}
           >
             <input
               type="email"
               placeholder="ENTER YOUR EMAIL"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="flex-1 border border-[#E1E1E1] p-[14px] outline-none focus:border-[#000000] text-[#000000] text-[12px] uppercase tracking-widest placeholder:text-[#757575] shadow-none rounded-none"
-              required
             />
             <button
               type="submit"
@@ -109,6 +138,19 @@ const Footer = () => {
               SUBSCRIBE
             </button>
           </form>
+          {msg && (
+            <p
+              style={{
+                fontSize: "11px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                marginTop: "8px",
+                color: msgType === "error" ? "#cc0000" : "#000000",
+              }}
+            >
+              {msg}
+            </p>
+          )}
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { AiFillStar } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "../../context/StoreContext";
 import { fetchUnifiedProducts } from "../../services/productService";
 import Filters from "../Filters/Filters";
@@ -16,6 +16,7 @@ const extractSortId = (id) => {
 
 const Products = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { state, dispatch } = useStore();
   const { wishlist, searchQuery } = state;
 
@@ -46,6 +47,14 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const category = query.get("category");
+    if (category) {
+      setActiveCategory(String(category).toLowerCase());
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     console.log(
       "Category distribution:",
       allProducts.reduce((acc, product) => {
@@ -68,6 +77,10 @@ const Products = () => {
     if (productCat === filterCat) return true;
     if (productCat.includes(filterCat)) return true;
     if (filterCat.includes(productCat)) return true;
+
+    if (filterCat === "fragrance" && productCat.includes("grooming")) {
+      return true;
+    }
 
     return false;
   };
@@ -278,12 +291,53 @@ const Products = () => {
                     </button>
                   </div>
 
-                  <div className="px-4 py-4">
-                    <h3 className="text-[13px] text-[#000000] font-bold uppercase tracking-[0.1em] leading-[1.5] min-h-[40px] line-clamp-2">
+                  <div
+                    className="px-4 py-4"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: 1,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "Inter, sans-serif",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        color: "#000000",
+                        margin: "0 0 6px 0",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        lineHeight: "1.4",
+                        minHeight: "34px",
+                      }}
+                    >
                       {product.title}
-                    </h3>
+                    </p>
 
-                    <div className="mt-3 flex items-center gap-3">
+                    <div className="min-h-[18px]">
+                      {stars > 0 && (
+                        <div className="mt-2 flex items-center gap-1 text-[14px]">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <AiFillStar
+                              key={`${product.id}-star-${index}`}
+                              className={
+                                index < stars
+                                  ? "text-[#000000]"
+                                  : "text-[#E1E1E1]"
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-auto pt-3 flex items-center gap-3">
                       {hasDiscount && (
                         <span className="text-[12px] text-[#757575] line-through">
                           ₹{originalPrice.toFixed(2)}
@@ -293,21 +347,6 @@ const Products = () => {
                         ₹{Number(product.price).toFixed(2)}
                       </span>
                     </div>
-
-                    {stars > 0 && (
-                      <div className="mt-2 flex items-center gap-1 text-[14px]">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <AiFillStar
-                            key={`${product.id}-star-${index}`}
-                            className={
-                              index < stars
-                                ? "text-[#000000]"
-                                : "text-[#E1E1E1]"
-                            }
-                          />
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </article>
               );
