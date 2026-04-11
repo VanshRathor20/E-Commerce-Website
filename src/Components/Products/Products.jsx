@@ -156,11 +156,11 @@ const Products = ({
              <div className="flex justify-center items-center gap-3 mt-2">
                 {i.discountPercentage > 0 && (
                    <span className="text-[13px] text-fashion-grey line-through">
-                      ${oldPrice.toFixed(2)}
+                      ₹{oldPrice.toFixed(2)}
                    </span>
                 )}
                 <span className="text-[14px] font-normal text-fashion-black">
-                   ${i.price.toFixed(2)}
+                   ₹{i.price.toFixed(2)}
                 </span>
              </div>
           </div>
