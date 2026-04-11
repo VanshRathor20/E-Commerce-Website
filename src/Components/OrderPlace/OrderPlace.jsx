@@ -37,25 +37,25 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
   }, []);
 
   return (
-    <section className={`fixed inset-0 z-[70] flex items-center justify-center bg-black/30 ${upiUrl ? 'backdrop-blur-md' : 'backdrop-blur-sm'}`}>
-      <div className="bg-white rounded-lg p-8 w-full max-w-md text-center shadow-lg">
-        <h1 className="text-2xl font-bold mb-4">Place Your Order</h1>
-        <p className="mb-6">Total Amount: ₹{subtotal.toFixed(2)}</p>
+    <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 text-[#000000]">
+      <div className="bg-[#FFFFFF] rounded-none p-8 w-[90vw] md:w-full max-w-md text-center border border-[#E1E1E1]">
+        <h1 className="text-[20px] font-bold mb-4 uppercase tracking-[0.15em] text-[#000000]">PLACE YOUR ORDER</h1>
+        <p className="mb-6 text-[14px]">TOTAL AMOUNT: ₹{subtotal.toFixed(2)}</p>
 
         {!upiUrl ? (
           <button
             onClick={handleGenerateQR}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-44 cursor-pointer"
+            className="bg-[#000000] hover:bg-[#575757] text-[#FFFFFF] px-6 py-[16px] rounded-none w-full cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-colors"
           >
             Generate Payment QR
           </button>
         ) : (
           <div className="flex flex-col items-center gap-3">
             <QRCodeCanvas value={upiUrl} size={200} />
-            <button className="bg-green-600 active:bg-green-700 text-white px-6 py-3 rounded-lg">
+            <button className="bg-[#000000] hover:bg-[#575757] text-[#FFFFFF] rounded-none w-full focus:outline-none">
                 <a
               href={upiUrl}
-              className="  mt-2"
+              className="block uppercase tracking-[0.1em] text-[13px] font-bold py-[16px] w-full"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -67,15 +67,15 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
 
         {paymentSaved && (
           <div className="mt-6 text-sm text-gray-600">
-            <p className="font-semibold text-zinc-700">Last Payment:</p>
-            <p>₹{paymentSaved.amount} to {paymentSaved.upiId}</p>
-            <p className="text-xs">on {paymentSaved.time}</p>
+            <p className="font-semibold text-[#757575] uppercase text-[13px] tracking-widest">Last Payment:</p>
+            <p className="text-[#000000] text-[15px] font-bold">₹{paymentSaved.amount} to {paymentSaved.upiId}</p>
+            <p className="text-[12px] text-[#757575] uppercase tracking-wider mt-1">{paymentSaved.time}</p>
           </div>
         )}
 
         <button
           onClick={onClose}
-          className="bg-zinc-700 hover:bg-zinc-800 text-white px-6 py-3 rounded-lg w-44 mt-6 cursor-pointer"
+          className="border border-[#000000] bg-transparent hover:bg-[#000000] hover:text-[#FFFFFF] text-[#000000] px-6 py-[16px] rounded-none w-full mt-6 cursor-pointer uppercase tracking-[0.1em] text-[13px] font-bold transition-colors"
         >
           Back to Home
         </button>

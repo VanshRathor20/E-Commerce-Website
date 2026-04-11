@@ -69,9 +69,9 @@ const OrderSummary = ({ cart, subtotal, shippingFee, orderTotal, closePanel, onP
         <div className="flex mt-8 gap-x-4">
           <button
             onClick={closePanel}
-            className="border border-fashion-black bg-transparent flex-1 cursor-pointer py-4 text-fashion-black font-bold uppercase tracking-widest text-[12px] hover:bg-gray-50 transition-colors"
+            className="border border-[#000000] bg-[#FFFFFF] flex-1 cursor-pointer py-[14px] text-[#000000] font-bold uppercase tracking-widest text-[12px] hover:bg-[#000000] hover:text-[#FFFFFF] transition-colors rounded-none"
           >
-            Close
+            CLOSE
           </button>
           <button
             onClick={() => {
@@ -79,9 +79,9 @@ const OrderSummary = ({ cart, subtotal, shippingFee, orderTotal, closePanel, onP
               onPlaceOrder && onPlaceOrder();
               closePanel && closePanel();
             }}
-            className="bg-fashion-black flex-1 py-4 text-fashion-white font-bold uppercase tracking-widest text-[12px] cursor-pointer hover:bg-[#575757] transition-colors"
+            className="bg-[#000000] flex-1 py-[14px] text-[#FFFFFF] font-bold uppercase tracking-widest text-[12px] cursor-pointer hover:bg-[#575757] transition-colors rounded-none"
           >
-            Place Order
+            PLACE ORDER
           </button>
         </div>
       </div>

@@ -50,22 +50,22 @@ const Navbar = ({
   return (
     <>
       <header
-        className={`bg-white sticky top-0 left-0 right-0 z-[1000] transition-shadow duration-300 ${
-          isScrolled ? "shadow-sm border-b border-[#E1E1E1]" : "border-b border-[#E1E1E1]"
+        className={`bg-white sticky top-0 left-0 right-0 z-[1000] transition-shadow duration-300 border-b border-[#E1E1E1] ${
+          isScrolled ? "shadow-sm" : ""
         }`}
       >
-        <nav className="h-[80px] flex items-center justify-between w-full max-w-7xl mx-auto px-5 lg:px-10">
+        <nav className="h-[80px] flex items-center justify-between w-full mx-auto px-8 py-4 relative">
           
           <Link
             to="/"
-            className="text-[#000000] font-bold uppercase text-2xl tracking-widest cursor-pointer whitespace-nowrap"
+            className="text-[#000000] font-bold uppercase text-2xl tracking-[0.05em] cursor-pointer whitespace-nowrap"
             onClick={() => window.scrollTo(0,0)}
           >
             FASHION STORE
           </Link>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-x-8">
+          {/* Desktop Nav Links (Absolutely Centered) */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-x-8">
              {navLinks.map((link) => (
                 link.name === "SHOP" ? (
                   <a 
@@ -91,7 +91,7 @@ const Navbar = ({
           </div>
 
           {/* Nav Actions */}
-          <div className="hidden md:flex justify-end gap-x-6 items-center flex-1">
+          <div className="hidden md:flex justify-end gap-x-6 items-center">
             <div className="flex items-center">
               {isSearchOpen ? (
                 <div className="flex items-center border-b border-[#E1E1E1] pb-1 animate-fade-in">

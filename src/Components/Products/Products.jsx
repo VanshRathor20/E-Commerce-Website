@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { GoHeartFill, GoHeart } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 const Products = ({
   searchQuery = "",
@@ -12,6 +13,7 @@ const Products = ({
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState(["All"]);
   const [activeTab, setActiveTab] = useState("All");
+  const navigate = useNavigate();
 
   const normalizeProduct = (item) => ({
     ...item,
@@ -107,7 +109,8 @@ const Products = ({
       return (
         <div
           key={i.id}
-          className="group flex flex-col bg-white border border-transparent hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300"
+          onClick={() => navigate(`/product/${i.id}`)}
+          className="group flex flex-col bg-white border border-transparent hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer"
           data-aos="fade-up"
           data-aos-delay={(idx % 4) * 100}
         >
@@ -131,7 +134,7 @@ const Products = ({
 
              {/* Wishlist Button */}
              <button
-                onClick={() => addToWishlist && addToWishlist(i)}
+                onClick={(e) => { e.stopPropagation(); addToWishlist && addToWishlist(i); }}
                 className="absolute top-3 right-3 text-xl z-10 transition-colors text-[#000000]"
              >
                 {isInWishlist(i) ? <GoHeartFill /> : <GoHeart />}
@@ -140,7 +143,7 @@ const Products = ({
              {/* Sliding Add To Cart Button */}
              <button
                className="absolute bottom-0 w-full left-0 bg-[#000000] text-[#FFFFFF] py-[14px] text-[12px] uppercase font-bold tracking-[0.15em] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-350 ease-out hover:!bg-[#575757] rounded-none"
-               onClick={() => AddToCart && AddToCart(i)}
+               onClick={(e) => { e.stopPropagation(); AddToCart && AddToCart(i); }}
              >
                Add to Cart
              </button>

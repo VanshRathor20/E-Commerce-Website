@@ -28,8 +28,8 @@ const Wishlist = ({
         }`}
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-5 border-b border-fashion-border">
-          <h3 className="font-bold text-[14px] text-fashion-black uppercase tracking-widest">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-[#E1E1E1]">
+          <h3 className="font-bold text-[14px] text-[#000000] uppercase tracking-widest">
             Your Wishlist
           </h3>
           <button
@@ -108,9 +108,9 @@ const Wishlist = ({
                         AddToCart && AddToCart(item);
                         removeFromWishlist && removeFromWishlist(item.id);
                       }}
-                      className="bg-fashion-black text-fashion-white font-bold uppercase tracking-widest text-[12px] px-4 py-2 rounded-none cursor-pointer hover:bg-[#575757] transition-colors"
+                      className="bg-[#000000] text-[#FFFFFF] font-bold uppercase tracking-[0.1em] text-[12px] px-4 py-2 rounded-none cursor-pointer hover:bg-[#575757] transition-colors"
                     >
-                      Add to Cart
+                      ADD TO CART
                     </button>
                   </div>
                 </div>
@@ -121,12 +121,12 @@ const Wishlist = ({
 
         {/* Footer Area */}
         {wishlist.length > 0 && (
-          <div className="p-6 border-t border-fashion-border bg-fashion-white flex flex-col">
+          <div className="p-6 border-t border-[#E1E1E1] bg-[#FFFFFF] flex flex-col">
             <button
-              className="w-full bg-fashion-black text-fashion-white font-bold uppercase tracking-widest text-[12px] py-4 rounded-none cursor-pointer hover:bg-[#575757] transition-colors"
+              className="w-full border border-[#000000] bg-[#FFFFFF] text-[#000000] font-bold uppercase tracking-[0.1em] text-[12px] py-[14px] rounded-none cursor-pointer hover:bg-[#000000] hover:text-[#FFFFFF] transition-colors"
               onClick={clearWishlist}
             >
-              Clear All
+              CLEAR ALL
             </button>
           </div>
         )}
