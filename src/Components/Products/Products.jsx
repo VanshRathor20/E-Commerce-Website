@@ -1,251 +1,366 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { GoHeartFill, GoHeart } from "react-icons/go";
+import React, { useEffect, useMemo, useState } from "react";
+import { GoHeart, GoHeartFill } from "react-icons/go";
+import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../context/StoreContext";
+import { fetchUnifiedProducts } from "../../services/productService";
+import Filters from "../Filters/Filters";
+import SkeletonCard from "../SkeletonCard/SkeletonCard";
+
+const PAGE_SIZE = 20;
+
+const extractSortId = (id) => {
+  const matched = String(id).match(/(\d+)$/);
+  return matched ? Number(matched[1]) : 0;
+};
 
 const Products = () => {
-  const { state, dispatch } = useStore();
-  const { searchQuery, wishlist } = state;
   const navigate = useNavigate();
+  const { state, dispatch } = useStore();
+  const { wishlist, searchQuery } = state;
 
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState(["All"]);
-  const [activeTab, setActiveTab] = useState("All");
-  const [addedItems, setAddedItems] = useState({});
-
-  const normalizeProduct = (item) => ({
-    ...item,
-    name: item.title,
-    image: item.thumbnail,
+  const [isFatalError, setIsFatalError] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("default");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 99999 });
+  const [draftPriceRange, setDraftPriceRange] = useState({
+    min: 0,
+    max: 99999,
   });
+  const [addedItems, setAddedItems] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchProducts = async (signal) => {
+  const loadProducts = async () => {
     setLoading(true);
-    setError(null);
-
+    setIsFatalError(false);
     try {
-      const response = await fetch("https://dummyjson.com/products?limit=12", {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch products (HTTP ${response.status})`);
-      }
-
-      const data = await response.json();
-      const normalizedProducts = (data.products || []).map(normalizeProduct);
-
-      setProducts(normalizedProducts);
-      const uniqueCategories = [
-        "All",
-        ...new Set(normalizedProducts.map((p) => p.category)),
-      ];
-      setCategories(uniqueCategories);
-    } catch (err) {
-      if (err.name !== "AbortError") {
-        setError(err.message || "Something went wrong while loading products.");
-      }
+      const unified = await fetchUnifiedProducts();
+      setAllProducts(unified);
+    } catch (error) {
+      setIsFatalError(true);
     } finally {
-      // Small timeout to show off CSS shimmer during dev if needed, or just let it snap
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetchProducts(controller.signal);
-    return () => {
-      controller.abort();
-    };
+    loadProducts();
   }, []);
 
-  const filteredProducts = useMemo(
-    () =>
-      products.filter((item) => {
-        const matchesCategory =
-          activeTab === "All" || item.category === activeTab;
-        const matchesSearch =
-          typeof searchQuery === "string" && searchQuery.trim() !== ""
-            ? item.name.toLowerCase().includes(searchQuery.toLowerCase())
-            : true;
-        return matchesCategory && matchesSearch;
-      }),
-    [products, activeTab, searchQuery],
+  useEffect(() => {
+    console.log(
+      "Category distribution:",
+      allProducts.reduce((acc, product) => {
+        const key = product.category || "unknown";
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {}),
+    );
+  }, [allProducts]);
+
+  const matchesCategory = (productCategory, filterCategory) => {
+    const productCat = String(productCategory || "")
+      .toLowerCase()
+      .trim();
+    const filterCat = String(filterCategory || "")
+      .toLowerCase()
+      .trim();
+
+    if (filterCat === "all") return true;
+    if (productCat === filterCat) return true;
+    if (productCat.includes(filterCat)) return true;
+    if (filterCat.includes(productCat)) return true;
+
+    return false;
+  };
+
+  const filteredProducts = useMemo(() => {
+    const query = String(searchQuery || "")
+      .toLowerCase()
+      .trim();
+    const next = allProducts
+      .filter((p) => matchesCategory(p.category, activeCategory))
+      .filter((p) => p.title.toLowerCase().includes(query))
+      .filter((p) => p.price >= priceRange.min && p.price <= priceRange.max)
+      .sort((a, b) => {
+        if (sortBy === "low-high") return a.price - b.price;
+        if (sortBy === "high-low") return b.price - a.price;
+        if (sortBy === "newest")
+          return extractSortId(b.id) - extractSortId(a.id);
+        return 0;
+      });
+    return next;
+  }, [allProducts, activeCategory, searchQuery, sortBy, priceRange]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, searchQuery, sortBy, priceRange]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / PAGE_SIZE),
+  );
+  const pageProducts = filteredProducts.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
   );
 
-  const isInWishlist = (product) => wishlist.some((p) => p.id === product.id);
+  const showingFrom =
+    filteredProducts.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const showingTo = Math.min(currentPage * PAGE_SIZE, filteredProducts.length);
 
-  const handleAddToCart = (e, product) => {
-    e.stopPropagation();
+  const jumpToPage = (page) => {
+    const clamped = Math.min(totalPages, Math.max(1, page));
+    setCurrentPage(clamped);
+    const section = document.getElementById("products-section");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleAddToCart = (event, product) => {
+    event.stopPropagation();
     dispatch({ type: "ADD_TO_CART", payload: product });
     setAddedItems((prev) => ({ ...prev, [product.id]: true }));
     setTimeout(() => {
       setAddedItems((prev) => ({ ...prev, [product.id]: false }));
-    }, 1500);
+    }, 1200);
   };
 
-  const handleClearFilters = () => {
-    setActiveTab("All");
-    dispatch({ type: "SET_SEARCH", payload: "" });
+  const inWishlist = (id) => wishlist.some((item) => item.id === id);
+
+  const toggleWishlist = (event, product) => {
+    event.stopPropagation();
+    if (inWishlist(product.id)) {
+      dispatch({ type: "REMOVE_FROM_WISHLIST", payload: product.id });
+      return;
+    }
+    dispatch({ type: "ADD_TO_WISHLIST", payload: product });
   };
 
-  if (error) {
+  const clearFilters = () => {
+    setActiveCategory("all");
+    setSortBy("default");
+    setPriceRange({ min: 0, max: 99999 });
+    setDraftPriceRange({ min: 0, max: 99999 });
+    dispatch({ type: "SET_SEARCH_QUERY", payload: "" });
+  };
+
+  if (isFatalError) {
     return (
-      <section id="products-section" className="section-wrapper w-full max-w-[1280px] mx-auto">
-         <div className="border border-[#E1E1E1] p-[60px] flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
-            <div className="w-16 h-16 rounded-full border-[3px] border-[#000000] text-[#000000] flex items-center justify-center text-[32px] font-bold mb-6">
-              !
-            </div>
-            <h2 className="text-[#000000] font-bold uppercase text-[24px] tracking-[0.1em] mb-2">SOMETHING WENT WRONG</h2>
-            <p className="text-[#757575] text-[15px] mb-8 uppercase tracking-widest">We couldn't load products. Please try again.</p>
-            <button
-               onClick={() => fetchProducts()}
-               className="bg-[#000000] hover:bg-[#575757] text-[#FFFFFF] uppercase font-bold tracking-[0.1em] text-[13px] px-10 py-[16px] rounded-none transition-colors"
-            >
-               TRY AGAIN
-            </button>
-         </div>
+      <section
+        id="products-section"
+        className="section-wrapper w-full max-w-[1280px] mx-auto"
+      >
+        <div className="flex flex-col items-center justify-center text-center p-[80px] border border-[#E1E1E1]">
+          <div className="w-[48px] h-[48px] border-2 border-[#000000] rounded-full flex items-center justify-center text-[#000000] text-[24px] font-bold mb-5">
+            !
+          </div>
+          <h2 className="text-[#000000] text-[20px] font-bold uppercase tracking-[0.1em] mb-3">
+            SOMETHING WENT WRONG
+          </h2>
+          <p className="text-[#757575] text-[15px] mb-8">
+            We couldn't load products. Please try again.
+          </p>
+          <button
+            onClick={loadProducts}
+            className="bg-[#000000] text-[#FFFFFF] px-8 py-[14px] text-[13px] uppercase tracking-[0.1em] font-bold hover:bg-[#575757] transition-colors cursor-pointer"
+          >
+            TRY AGAIN
+          </button>
+        </div>
       </section>
     );
   }
-
-  const renderSkeletons = () => {
-    return Array.from({ length: 8 }).map((_, idx) => (
-      <div key={idx} className="flex flex-col border border-transparent">
-        <div className="w-full aspect-[3/4] skeleton-shimmer mb-4"></div>
-        <div className="w-3/4 h-[16px] skeleton-shimmer mb-3 mx-auto"></div>
-        <div className="w-1/2 h-[14px] skeleton-shimmer mx-auto"></div>
-      </div>
-    ));
-  };
-
-  const renderProducts = () => {
-    return filteredProducts.map((i, idx) => {
-      const oldPrice = i.price / (1 - i.discountPercentage / 100);
-      const added = addedItems[i.id];
-
-      return (
-        <div
-          key={i.id}
-          onClick={() => navigate(`/product/${i.id}`)}
-          className="group flex flex-col bg-[#FFFFFF] border border-transparent hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 cursor-pointer h-full pb-4"
-          data-aos="fade-up"
-          data-aos-delay={(idx % 4) * 100}
-        >
-          {/* Image Container */}
-          <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F5] flex items-center justify-center w-full">
-             <img
-               src={i.image}
-               alt={i.name}
-               className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 mix-blend-multiply"
-               loading="lazy"
-               onError={(e) => { e.target.style.display = "none"; }}
-             />
-
-             {/* Top badges */}
-             <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-                {i.discountPercentage > 0 && (
-                   <span className="bg-[#000000] text-[#FFFFFF] text-[10px] uppercase font-bold tracking-[0.1em] px-[8px] py-[4px] rounded-none">
-                     SALE
-                   </span>
-                )}
-             </div>
-
-             {/* Wishlist Button */}
-             <button
-                onClick={(e) => { e.stopPropagation(); dispatch({ type: 'TOGGLE_WISHLIST', payload: i }); }}
-                className="absolute top-3 right-3 text-[20px] z-10 transition-transform duration-300 hover:scale-110 text-[#000000]"
-             >
-                {isInWishlist(i) ? <GoHeartFill className="scale-110" /> : <GoHeart />}
-             </button>
-
-             {/* Sliding Add To Cart Button */}
-             <button
-               className={`absolute bottom-0 w-full left-0 bg-[#000000] text-[#FFFFFF] py-[16px] text-[12px] uppercase font-bold tracking-[0.15em] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-350 ease-out rounded-none border border-[#000000] ${added ? 'bg-[#575757]' : 'hover:!bg-[#575757]'}`}
-               onClick={(e) => handleAddToCart(e, i)}
-             >
-               {added ? "✓ ADDED" : "ADD TO CART"}
-             </button>
-          </div>
-
-          {/* Product Meta */}
-          <div className="pt-4 flex flex-col text-center mt-auto">
-             <h3 className="text-[13px] font-bold text-[#000000] uppercase tracking-[0.1em] leading-[1.4] line-clamp-2 px-2">
-                {i.name}
-             </h3>
-             <div className="flex justify-center items-center gap-3 mt-3">
-                {i.discountPercentage > 0 && (
-                   <span className="text-[13px] text-[#757575] line-through">
-                      ₹{oldPrice.toFixed(2)}
-                   </span>
-                )}
-                <span className="text-[14px] font-normal text-[#000000]">
-                   ₹{i.price.toFixed(2)}
-                </span>
-             </div>
-          </div>
-        </div>
-      );
-    });
-  };
 
   return (
     <section
       id="products-section"
       className="section-wrapper w-full max-w-[1280px] mx-auto"
     >
-      {/* Section Header */}
       <div className="section-heading-container" data-aos="fade-up">
-         <span className="section-label">OUR COLLECTION</span>
-         <h2 className="section-title">TRENDING NOW</h2>
-         <div className="section-underline"></div>
+        <span className="section-label">OUR COLLECTION</span>
+        <h2 className="section-title">TRENDING NOW</h2>
+        <div className="section-underline" />
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex flex-wrap gap-6 lg:gap-10 items-center justify-center mb-16">
-        {categories.map((category) => (
+      <Filters
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        draftPriceRange={draftPriceRange}
+        setDraftPriceRange={setDraftPriceRange}
+        applyPriceRange={() => {
+          const min = Math.max(0, Number(draftPriceRange.min) || 0);
+          const max = Math.max(min, Number(draftPriceRange.max) || 0);
+          setPriceRange({ min, max });
+          setDraftPriceRange({ min, max });
+        }}
+      />
+
+      {!loading && (
+        <p className="text-[13px] text-[#757575] uppercase tracking-[0.1em] mb-6">
+          Showing {showingFrom}-{showingTo} of {filteredProducts.length}{" "}
+          products
+        </p>
+      )}
+
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      ) : filteredProducts.length === 0 ? (
+        <div className="py-24 text-center border border-[#E1E1E1]">
+          <h3 className="text-[20px] text-[#000000] uppercase tracking-[0.1em] font-bold mb-3">
+            NO PRODUCTS FOUND
+          </h3>
+          <p className="text-[#757575] mb-8">
+            Try a different search term or category.
+          </p>
           <button
-            key={category}
-            className={`text-[12px] font-[500] uppercase tracking-[0.12em] pb-2 relative transition-colors ${
-               activeTab === category 
-                  ? "text-[#000000] border-b-2 border-[#000000]" 
-                  : "text-[#757575] border-b-2 border-transparent hover:text-[#000000]"
-            }`}
-            onClick={() => setActiveTab(category)}
+            onClick={clearFilters}
+            className="border border-[#000000] bg-[#FFFFFF] text-[#000000] px-7 py-[13px] text-[13px] font-bold uppercase tracking-[0.1em] hover:bg-[#000000] hover:text-[#FFFFFF] transition-all cursor-pointer"
           >
-            {category}
+            CLEAR FILTERS
           </button>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {pageProducts.map((product) => {
+              const wishlistActive = inWishlist(product.id);
+              const hasDiscount = Number(product.discountPercentage) > 0;
+              const originalPrice = hasDiscount
+                ? product.price / (1 - product.discountPercentage / 100)
+                : null;
+              const stars = Math.min(
+                5,
+                Math.max(0, Math.round(Number(product.rating) || 0)),
+              );
 
-      {/* Product Listing */}
-      <div className="w-full">
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 gap-y-12">
-            {renderSkeletons()}
+              return (
+                <article
+                  key={product.id}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  className="group cursor-pointer border border-[#E1E1E1] bg-[#FFFFFF] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all"
+                >
+                  <div className="relative aspect-[3/4] bg-[#F5F5F5] overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                      <span className="bg-[#000000] text-[#FFFFFF] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
+                        {product.category}
+                      </span>
+                      {hasDiscount && (
+                        <span className="bg-[#000000] text-[#FFFFFF] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
+                          SALE
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={(event) => toggleWishlist(event, product)}
+                      className="absolute top-3 right-3 text-[20px] text-[#000000] cursor-pointer"
+                      aria-label="Toggle wishlist"
+                    >
+                      {wishlistActive ? <GoHeartFill /> : <GoHeart />}
+                    </button>
+
+                    <button
+                      onClick={(event) => handleAddToCart(event, product)}
+                      className={`absolute bottom-0 left-0 w-full py-[14px] text-[12px] font-bold uppercase tracking-[0.12em] text-[#FFFFFF] bg-[#000000] transform transition-all duration-300 cursor-pointer ${
+                        addedItems[product.id]
+                          ? "translate-y-0 bg-[#575757]"
+                          : "translate-y-full group-hover:translate-y-0"
+                      }`}
+                    >
+                      {addedItems[product.id] ? "ADDED" : "ADD TO CART"}
+                    </button>
+                  </div>
+
+                  <div className="px-4 py-4">
+                    <h3 className="text-[13px] text-[#000000] font-bold uppercase tracking-[0.1em] leading-[1.5] min-h-[40px] line-clamp-2">
+                      {product.title}
+                    </h3>
+
+                    <div className="mt-3 flex items-center gap-3">
+                      {hasDiscount && (
+                        <span className="text-[12px] text-[#757575] line-through">
+                          ₹{originalPrice.toFixed(2)}
+                        </span>
+                      )}
+                      <span className="text-[15px] text-[#000000] font-bold">
+                        ₹{Number(product.price).toFixed(2)}
+                      </span>
+                    </div>
+
+                    {stars > 0 && (
+                      <div className="mt-2 flex items-center gap-1 text-[14px]">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <AiFillStar
+                            key={`${product.id}-star-${index}`}
+                            className={
+                              index < stars
+                                ? "text-[#000000]"
+                                : "text-[#E1E1E1]"
+                            }
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center py-24 w-full">
-            <h3 className="text-[20px] font-bold text-[#000000] uppercase tracking-[0.1em] mb-4">
-              NO PRODUCTS FOUND
-            </h3>
-            <p className="text-[15px] text-[#757575] mb-8">
-              Try a different category or search term.
-            </p>
+
+          <div className="flex items-center justify-center gap-2 mt-10">
             <button
-                onClick={handleClearFilters}
-                className="bg-[#FFFFFF] border border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-[#FFFFFF] uppercase font-bold tracking-[0.1em] text-[13px] px-10 py-[16px] rounded-none transition-colors duration-300"
+              onClick={() => jumpToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 border border-[#E1E1E1] text-[#000000] disabled:opacity-50 cursor-pointer"
             >
-               CLEAR FILTERS
+              ←
+            </button>
+            {Array.from({ length: totalPages }).map((_, index) => {
+              const page = index + 1;
+              const active = page === currentPage;
+              return (
+                <button
+                  key={page}
+                  onClick={() => jumpToPage(page)}
+                  className={`min-w-[36px] px-3 py-2 border text-[13px] uppercase tracking-[0.08em] cursor-pointer ${
+                    active
+                      ? "bg-[#000000] text-[#FFFFFF] border-[#000000]"
+                      : "bg-[#FFFFFF] text-[#000000] border-[#E1E1E1] hover:bg-[#F5F5F5]"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => jumpToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 border border-[#E1E1E1] text-[#000000] disabled:opacity-50 cursor-pointer"
+            >
+              →
             </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 gap-y-12 items-stretch">
-             {renderProducts()}
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </section>
   );
 };

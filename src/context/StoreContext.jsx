@@ -1,96 +1,157 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 
 const StoreContext = createContext();
+
+const STORAGE_KEYS = {
+  cart: "fs_cart",
+  wishlist: "fs_wishlist",
+};
 
 const initialState = {
   cart: [],
   wishlist: [],
-  activePanel: null, // "cart" | "wishlist" | null
+  user: null,
+  activePanel: null,
   searchQuery: "",
   cartAddedPulse: false,
 };
 
-function reducer(state, action) {
+const normalizeCartItem = (item) => ({
+  id: item.id,
+  title: item.title,
+  price: Number(item.price) || 0,
+  image: item.image || item.thumbnail || "",
+  category: item.category || "clothing",
+  quantity: Math.max(1, Number(item.quantity) || 1),
+  ...(item.discountPercentage
+    ? { discountPercentage: item.discountPercentage }
+    : {}),
+  ...(item.rating ? { rating: item.rating } : {}),
+});
+
+const parseStored = (key) => {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch (error) {
+    console.error("Failed to parse persisted store state", error);
+    return [];
+  }
+};
+
+const getInitialState = () => ({
+  ...initialState,
+  cart: parseStored(STORAGE_KEYS.cart),
+  wishlist: parseStored(STORAGE_KEYS.wishlist),
+});
+
+const reducer = (state, action) => {
   switch (action.type) {
-    case 'ADD_TO_CART': {
-      const existing = state.cart.find(i => i.id === action.payload.id);
-      let newCart;
-      // Default to adding 1 quantity if undefined
-      const addQty = action.payload.quantity || 1;
-      
+    case "ADD_TO_CART": {
+      const incoming = normalizeCartItem(action.payload || {});
+      const existing = state.cart.find((item) => item.id === incoming.id);
       if (existing) {
-        newCart = state.cart.map(i => 
-          i.id === action.payload.id ? { ...i, quantity: i.quantity + addQty } : i
-        );
-      } else {
-        newCart = [...state.cart, { ...action.payload, quantity: addQty }];
+        return {
+          ...state,
+          cartAddedPulse: true,
+          cart: state.cart.map((item) =>
+            item.id === incoming.id
+              ? { ...item, quantity: item.quantity + incoming.quantity }
+              : item,
+          ),
+        };
       }
-      return { ...state, cart: newCart, cartAddedPulse: true };
-    }
-    case 'REMOVE_FROM_CART':
-      return { ...state, cart: state.cart.filter(i => i.id !== action.payload) };
-    case 'UPDATE_QUANTITY':
       return {
         ...state,
-        cart: state.cart.map(i => 
-          i.id === action.payload.id ? { ...i, quantity: action.payload.quantity } : i
-        )
+        cartAddedPulse: true,
+        cart: [...state.cart, incoming],
       };
-    case 'CLEAR_CART':
-      return { ...state, cart: [] };
-    case 'TOGGLE_WISHLIST': {
-      const exists = state.wishlist.some(i => i.id === action.payload.id);
-      if (exists) {
-        return { ...state, wishlist: state.wishlist.filter(i => i.id !== action.payload.id) };
-      }
-      return { ...state, wishlist: [...state.wishlist, action.payload] };
     }
-    case 'CLEAR_WISHLIST':
+    case "REMOVE_FROM_CART":
+      return {
+        ...state,
+        cart: state.cart.filter((item) => item.id !== action.payload),
+      };
+    case "UPDATE_QUANTITY":
+      return {
+        ...state,
+        cart: state.cart
+          .map((item) =>
+            item.id === action.payload.id
+              ? {
+                  ...item,
+                  quantity: Math.max(0, Number(action.payload.quantity) || 0),
+                }
+              : item,
+          )
+          .filter((item) => item.quantity > 0),
+      };
+    case "CLEAR_CART":
+      return { ...state, cart: [] };
+    case "ADD_TO_WISHLIST": {
+      const candidate = normalizeCartItem({
+        ...(action.payload || {}),
+        quantity: 1,
+      });
+      if (state.wishlist.some((item) => item.id === candidate.id)) {
+        return state;
+      }
+      return { ...state, wishlist: [...state.wishlist, candidate] };
+    }
+    case "REMOVE_FROM_WISHLIST":
+      return {
+        ...state,
+        wishlist: state.wishlist.filter((item) => item.id !== action.payload),
+      };
+    case "CLEAR_WISHLIST":
       return { ...state, wishlist: [] };
-    case 'SET_PANEL':
+    case "TOGGLE_WISHLIST": {
+      const exists = state.wishlist.some(
+        (item) => item.id === action.payload.id,
+      );
+      if (exists) {
+        return {
+          ...state,
+          wishlist: state.wishlist.filter(
+            (item) => item.id !== action.payload.id,
+          ),
+        };
+      }
+      const candidate = normalizeCartItem({
+        ...(action.payload || {}),
+        quantity: 1,
+      });
+      return { ...state, wishlist: [...state.wishlist, candidate] };
+    }
+    case "SET_PANEL":
       return { ...state, activePanel: action.payload };
-    case 'SET_SEARCH':
-      return { ...state, searchQuery: action.payload };
-    case 'RESET_PULSE':
+    case "SET_SEARCH_QUERY":
+      return { ...state, searchQuery: action.payload || "" };
+    case "SET_SEARCH":
+      return { ...state, searchQuery: action.payload || "" };
+    case "RESET_PULSE":
       return { ...state, cartAddedPulse: false };
-    case 'REHYDRATE':
-      return { ...state, ...action.payload };
     default:
       return state;
   }
-}
+};
 
-export function StoreProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    try {
-      const storedCart = localStorage.getItem('fs_cart');
-      const storedWishlist = localStorage.getItem('fs_wish');
-      const hydratedData = {};
-      if (storedCart) hydratedData.cart = JSON.parse(storedCart);
-      if (storedWishlist) hydratedData.wishlist = JSON.parse(storedWishlist);
-      
-      if (Object.keys(hydratedData).length > 0) {
-        dispatch({ type: 'REHYDRATE', payload: hydratedData });
-      }
-    } catch (e) {
-      console.error("Failed to rehydrate state", e);
-    }
-  }, []);
+export const StoreProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, undefined, getInitialState);
 
   useEffect(() => {
-    localStorage.setItem('fs_cart', JSON.stringify(state.cart));
-    localStorage.setItem('fs_wish', JSON.stringify(state.wishlist));
+    localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(state.cart));
+    localStorage.setItem(STORAGE_KEYS.wishlist, JSON.stringify(state.wishlist));
   }, [state.cart, state.wishlist]);
 
   useEffect(() => {
-    if (state.cartAddedPulse) {
-      const t = setTimeout(() => {
-        dispatch({ type: 'RESET_PULSE' });
-      }, 400); // match bounce sequence duration
-      return () => clearTimeout(t);
+    if (!state.cartAddedPulse) {
+      return undefined;
     }
+    const timeout = setTimeout(() => {
+      dispatch({ type: "RESET_PULSE" });
+    }, 350);
+    return () => clearTimeout(timeout);
   }, [state.cartAddedPulse]);
 
   return (
@@ -98,8 +159,6 @@ export function StoreProvider({ children }) {
       {children}
     </StoreContext.Provider>
   );
-}
+};
 
-export function useStore() {
-  return useContext(StoreContext);
-}
+export const useStore = () => useContext(StoreContext);

@@ -5,7 +5,7 @@ import { useStore } from "../../context/StoreContext";
 const Wishlist = () => {
   const { state, dispatch } = useStore();
   const { activePanel, wishlist } = state;
-  const closePanel = () => dispatch({ type: 'SET_PANEL', payload: null });
+  const closePanel = () => dispatch({ type: "SET_PANEL", payload: null });
 
   return (
     <>
@@ -20,8 +20,8 @@ const Wishlist = () => {
       {/* Side Panel */}
       <div
         className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-[#FFFFFF] border-l border-[#E1E1E1] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto ${
-          activePanel === "wishlist" 
-            ? "translate-y-0 sm:translate-x-0" 
+          activePanel === "wishlist"
+            ? "translate-y-0 sm:translate-x-0"
             : "translate-y-full sm:translate-y-0 sm:translate-x-full"
         }`}
       >
@@ -77,7 +77,9 @@ const Wishlist = () => {
                   ) : null}
                   <div
                     className="absolute inset-0 bg-[#F5F5F5] items-center justify-center"
-                    style={{ display: (item.thumbnail || item.image) ? "none" : "flex" }}
+                    style={{
+                      display: item.thumbnail || item.image ? "none" : "flex",
+                    }}
                   >
                     <HiOutlineHeart className="text-[#E1E1E1] text-[24px]" />
                   </div>
@@ -91,7 +93,12 @@ const Wishlist = () => {
                     </h4>
                     <button
                       className="text-[#000000] hover:text-[#757575] transition-colors cursor-pointer text-[16px] ml-4 shrink-0"
-                      onClick={() => dispatch({ type: 'TOGGLE_WISHLIST', payload: item })}
+                      onClick={() =>
+                        dispatch({
+                          type: "REMOVE_FROM_WISHLIST",
+                          payload: item.id,
+                        })
+                      }
                       aria-label="Remove from wishlist"
                     >
                       <HiX />
@@ -112,8 +119,11 @@ const Wishlist = () => {
 
                     <button
                       onClick={() => {
-                        dispatch({ type: 'ADD_TO_CART', payload: item });
-                        dispatch({ type: 'TOGGLE_WISHLIST', payload: item });
+                        dispatch({ type: "ADD_TO_CART", payload: item });
+                        dispatch({
+                          type: "REMOVE_FROM_WISHLIST",
+                          payload: item.id,
+                        });
                       }}
                       className="bg-[#000000] text-[#FFFFFF] font-bold uppercase tracking-[0.1em] text-[12px] px-4 py-2 rounded-none cursor-pointer hover:bg-[#575757] transition-all duration-300"
                     >
@@ -131,7 +141,7 @@ const Wishlist = () => {
           <div className="p-6 border-t border-[#E1E1E1] bg-[#FFFFFF] flex flex-col">
             <button
               className="w-full border border-[#000000] bg-[#FFFFFF] text-[#000000] font-bold uppercase tracking-[0.1em] text-[13px] py-[16px] rounded-none cursor-pointer hover:bg-[#000000] hover:text-[#FFFFFF] transition-all duration-300"
-              onClick={() => dispatch({ type: 'CLEAR_WISHLIST' })}
+              onClick={() => dispatch({ type: "CLEAR_WISHLIST" })}
             >
               CLEAR ALL
             </button>

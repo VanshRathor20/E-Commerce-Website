@@ -1,28 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-fashion-white: #FFFFFF;
+  --color-fashion-white: #ffffff;
   --color-fashion-black: #000000;
   --color-fashion-grey: #757575;
-  --color-fashion-border: #E1E1E1;
+  --color-fashion-border: #e1e1e1;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 html {
   scroll-behavior: smooth;
 }
 
-html, body {
-  font-family: 'Inter', sans-serif;
-  background-color: #FFFFFF;
+html,
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #ffffff;
   color: #757575;
   line-height: 1.8;
   font-size: 15px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Inter", sans-serif;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -32,7 +37,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Base Interactions */
-input, button, a {
+input,
+button,
+a {
   transition: all 0.3s ease;
 }
 
@@ -61,7 +68,7 @@ input, button, a {
 }
 
 .section-title {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: clamp(28px, 4vw, 48px);
   text-transform: uppercase;
@@ -79,25 +86,34 @@ input, button, a {
 
 /* Shimmer Loading Animations */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 @keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
+.marquee-track,
 .animate-marquee {
   display: inline-block;
   white-space: nowrap;
-  animation: marquee 15s linear infinite;
+  animation: marquee 35s linear infinite;
 }
 
 /* Custom Fade Transition */
