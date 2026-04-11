@@ -19,38 +19,106 @@ const ProductDetail = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // reset scroll on nav
-    const fetchProduct = async () => {
-      setLoading(true);
-      try {
-        const products = await fetchUnifiedProducts();
-        const data = products.find((item) => String(item.id) === String(id));
-        if (!data) throw new Error("Failed to fetch product");
-        setProduct(data);
+    setLoading(true);
+    setError(null);
+
+    const dummyId = String(id).replace("dummyjson-", "");
+
+    fetch(`https://dummyjson.com/products/${dummyId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("primary-fetch-failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setProduct({
+          ...data,
+          id: `dummyjson-${data.id}`,
+          image: data.thumbnail,
+        });
         setActiveImage(0);
-      } catch (err) {
-        setError(err.message);
-      } finally {
         setLoading(false);
-      }
-    };
-    fetchProduct();
+      })
+      .catch(async () => {
+        try {
+          const products = await fetchUnifiedProducts();
+          const fallback = products.find(
+            (item) => String(item.id) === String(id),
+          );
+          if (!fallback) {
+            throw new Error("fallback-fetch-failed");
+          }
+          setProduct(fallback);
+          setActiveImage(0);
+          setLoading(false);
+        } catch {
+          setError(true);
+          setLoading(false);
+        }
+      });
   }, [id]);
 
   if (loading) {
     return (
-      <div className="section-wrapper w-full max-w-[1280px] mx-auto min-h-[60vh]">
-        <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-start">
-          <div className="w-full md:w-1/2 aspect-[3/4] skeleton-shimmer bg-[#F5F5F5]"></div>
-          <div className="w-full md:w-1/2 flex flex-col gap-6 py-6 border border-transparent">
-            <div className="w-1/4 h-[12px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-3/4 h-[32px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-1/3 h-[24px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-full h-[1px] bg-[#E1E1E1] my-2"></div>
-            <div className="w-full h-[14px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-full h-[14px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-5/6 h-[14px] skeleton-shimmer bg-[#F5F5F5]"></div>
-            <div className="w-1/2 h-[54px] skeleton-shimmer bg-[#F5F5F5] mt-6"></div>
-          </div>
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "80px auto",
+          padding: "0 24px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+        }}
+      >
+        <div
+          className="skeleton-shimmer"
+          style={{
+            aspectRatio: "3/4",
+            width: "100%",
+          }}
+        />
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "16px", width: "30%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "32px", width: "80%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "32px", width: "60%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "24px", width: "25%", marginTop: "8px" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "1px", width: "100%", marginTop: "8px" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "16px", width: "100%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "16px", width: "90%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "16px", width: "95%" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "52px", width: "100%", marginTop: "16px" }}
+          />
+          <div
+            className="skeleton-shimmer"
+            style={{ height: "52px", width: "100%" }}
+          />
         </div>
       </div>
     );

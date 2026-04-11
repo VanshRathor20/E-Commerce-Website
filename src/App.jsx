@@ -14,6 +14,7 @@ import Collections from "./pages/Collections/Collections";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import FAQ from "./pages/FAQ/FAQ";
+import NotFound from "./pages/NotFound/NotFound";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 import { useStore } from "./context/StoreContext";
@@ -22,6 +23,10 @@ const App = () => {
   const { state } = useStore();
   const location = useLocation();
   const [showTop, setShowTop] = useState(false);
+  const knownStaticPaths = ["/", "/collections", "/about", "/contact", "/faq"];
+  const isProductPath = /^\/product\/[^/]+$/.test(location.pathname);
+  const showGlobalShell =
+    knownStaticPaths.includes(location.pathname) || isProductPath;
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
@@ -40,7 +45,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative bg-[#FFFFFF]">
-      <Navbar />
+      {showGlobalShell && <Navbar />}
 
       <main className="flex-1 animate-fade-in-up" key={location.pathname}>
         <Routes>
@@ -50,16 +55,17 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      <Footer />
+      {showGlobalShell && <Footer />}
 
       {/* Global Modals */}
-      <Cart />
-      <Wishlist />
+      {showGlobalShell && <Cart />}
+      {showGlobalShell && <Wishlist />}
 
-      {state.activePanel === "summary" && <OrderSummary />}
+      {showGlobalShell && state.activePanel === "summary" && <OrderSummary />}
 
       {showTop && (
         <button

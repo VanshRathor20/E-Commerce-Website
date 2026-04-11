@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const OrderPlace = ({ subtotal = 1000, onClose }) => {
   const [showQR, setShowQR] = useState(false);
 
-  useEffect(() => {
-    console.log("OrderPlace mounted, subtotal:", subtotal);
-  }, []);
-
   const total = (typeof subtotal === "number" ? subtotal : 0).toFixed(2);
   const upiId = "yourupiid@upi";
 
-  // Build URL simply - no encoding issues
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&am=${total}&cu=INR`;
-  const fallbackUrl = `https://quickchart.io/qr?text=upi://pay?pa=${upiId}&am=${total}&size=250`;
+  const qrData = encodeURIComponent(
+    `upi://pay?pa=${upiId}&am=${total}&cu=INR&tn=FashionStore`,
+  );
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrData}`;
 
-  const handleGenerateQR = () => {
-    console.log("QR URL:", qrUrl);
-    setShowQR(true);
-  };
+  const handleGenerateQR = () => setShowQR(true);
 
   return (
     <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 text-[#000000]">
@@ -39,57 +33,42 @@ const OrderPlace = ({ subtotal = 1000, onClose }) => {
         )}
 
         {showQR && (
-          <div
-            className="animate-fade-in-up"
-            style={{
-              textAlign: "center",
-              marginTop: "24px",
-              marginBottom: "32px",
-            }}
-          >
+          <div style={{ textAlign: "center", padding: "24px 0" }}>
             <img
+              key={qrUrl}
               src={qrUrl}
-              alt="UPI Payment QR Code"
-              width={250}
-              height={250}
+              width={220}
+              height={220}
+              alt="UPI QR"
               style={{
-                border: "1px solid #E1E1E1",
                 display: "block",
                 margin: "0 auto",
+                border: "1px solid #E1E1E1",
               }}
-              onLoad={() => console.log("QR loaded successfully")}
               onError={(e) => {
-                console.log("QR failed, trying backup URL");
-                e.target.src = fallbackUrl;
-                // Double fallback just in case
-                e.target.onerror = () => {
-                  console.log(
-                    "Fallback also failed, using simplistic data string.",
-                  );
-                  e.target.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PaymentOf${total}`;
-                };
+                e.target.onerror = null;
+                e.target.src = `https://quickchart.io/qr?text=${qrData}&size=220`;
               }}
             />
             <p
               style={{
+                marginTop: "16px",
                 fontSize: "12px",
                 color: "#757575",
-                marginTop: "16px",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                fontWeight: "bold",
               }}
             >
-              Scan with any UPI app to pay ₹{total}
+              Scan with Google Pay, PhonePe, or any UPI app
             </p>
             <p
               style={{
+                marginTop: "4px",
                 fontSize: "11px",
                 color: "#757575",
-                marginTop: "4px",
               }}
             >
-              UPI ID: {upiId}
+              Amount: ₹{total} | UPI: {upiId}
             </p>
           </div>
         )}

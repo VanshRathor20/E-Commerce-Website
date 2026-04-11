@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { IoSearchSharp } from "react-icons/io5";
 import { GoHeartFill, GoHeart } from "react-icons/go";
 import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
-import { HiMenu, HiX } from "react-icons/hi";
 import { useStore } from "../../context/StoreContext";
+import { IoIosSearch } from "react-icons/io";
+
 
 const Navbar = () => {
   const { state, dispatch } = useStore();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState(state.searchQuery || "");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const inputRef = useRef(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,11 +29,14 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      dispatch({ type: "SET_SEARCH_QUERY", payload: searchInput });
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [dispatch, searchInput]);
+    if (searchOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  const onSearch = (value) => {
+    dispatch({ type: "SET_SEARCH_QUERY", payload: value });
+  };
 
   const handleScrollToProducts = () => {
     const section = document.getElementById("products-section");
@@ -75,7 +79,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Nav Links (Absolutely Centered) */}
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-x-8">
+          <div className="nav-links hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-x-8">
             {navLinks.map((link) =>
               link.name === "SHOP" ? (
                 <a
@@ -102,43 +106,71 @@ const Navbar = () => {
 
           {/* Nav Actions */}
           <div className="hidden md:flex justify-end gap-x-6 items-center">
-            <div className="flex items-center">
-              {isSearchOpen ? (
-                <div className="flex items-center border-b border-[#000000] pb-1 animate-fade-in gap-2">
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="SEARCH PRODUCTS..."
-                    autoFocus
-                    value={searchInput}
-                    onBlur={() => {
-                      if (!searchInput.trim()) {
-                        setTimeout(() => setIsSearchOpen(false), 150);
-                      }
-                    }}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="w-48 text-[12px] focus:outline-none uppercase tracking-[0.1em] placeholder:text-[#757575] text-[#000000] bg-transparent"
-                  />
-                  {searchInput && (
-                    <button
-                      onClick={() => {
-                        setSearchInput("");
-                        setIsSearchOpen(false);
-                      }}
-                      className="text-[#757575] hover:text-[#000000] text-[14px] cursor-pointer"
-                      aria-label="Clear search"
-                    >
-                      <HiX />
-                    </button>
-                  )}
-                  <IoSearchSharp className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]" />
-                </div>
-              ) : (
-                <IoSearchSharp
-                  className="text-[20px] text-[#000000] cursor-pointer hover:text-[#757575] transition-colors stroke-[1.5]"
-                  onClick={() => setIsSearchOpen(true)}
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  overflow: "hidden",
+                  width: searchOpen ? "220px" : "0px",
+                  transition: "width 0.4s ease",
+                  marginRight: searchOpen ? "8px" : "0",
+                }}
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    onSearch(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setSearchOpen(false);
+                      setSearchQuery("");
+                      onSearch("");
+                    }
+                  }}
+                  placeholder="SEARCH PRODUCTS..."
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    borderBottom: "1px solid #000",
+                    outline: "none",
+                    fontSize: "12px",
+                    letterSpacing: "0.1em",
+                    padding: "4px 0",
+                    fontFamily: "Inter, sans-serif",
+                    textTransform: "uppercase",
+                  }}
                 />
-              )}
+              </div>
+
+              <button
+                onClick={() => {
+                  if (searchOpen) {
+                    setSearchQuery("");
+                    onSearch("");
+                  }
+                  setSearchOpen(!searchOpen);
+                }}
+                className="text-[#000000] hover:text-[#757575] transition-colors duration-300"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px",
+                  fontSize: "20px",
+                }}
+                aria-label="Toggle search"
+              >
+                {searchOpen ? "✕" : <IoIosSearch />}
+              </button>
             </div>
 
             <button
@@ -169,106 +201,56 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Actions */}
-          <div className="flex items-center gap-x-5 md:hidden">
-            <IoSearchSharp
-              className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-            />
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-[20px] text-[#000000] cursor-pointer stroke-[1.5]"
-            >
-              {isMobileMenuOpen ? <HiX /> : <HiMenu />}
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            style={{
+              display: "none",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "22px",
+              padding: "4px",
+            }}
+            className="mobile-menu-btn"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileOpen ? "✕" : "☰"}
+          </button>
         </nav>
 
-        {isSearchOpen && (
-          <div className="md:hidden w-full bg-[#FFFFFF] px-6 py-4 border-t border-[#E1E1E1]">
-            <div className="flex items-center border border-[#000000] p-2 gap-2">
-              <input
-                type="text"
-                placeholder="SEARCH PRODUCTS..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="flex-1 focus:outline-none text-[12px] tracking-[0.1em] uppercase bg-transparent p-1 text-[#000000]"
-              />
-              {searchInput && (
-                <button
-                  onClick={() => setSearchInput("")}
-                  className="text-[#757575] hover:text-[#000000] text-[14px] cursor-pointer"
-                  aria-label="Clear search"
-                >
-                  <HiX />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {isMobileMenuOpen && (
-          <div className="md:hidden w-full bg-[#FFFFFF] border-t border-[#E1E1E1] flex flex-col uppercase tracking-[0.12em] text-[12px]">
-            {navLinks.map((link) =>
-              link.name === "SHOP" ? (
-                <button
-                  key={link.name}
-                  className="w-full text-left py-4 px-6 border-b border-[#E1E1E1] hover:bg-[#F9F9F9] text-[#000000] font-[500] transition-colors"
-                  onClick={(e) => {
-                    setIsMobileMenuOpen(false);
-                    handleShopClick(e);
-                  }}
-                >
-                  {link.name}
-                </button>
-              ) : (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className="w-full text-left py-4 px-6 border-b border-[#E1E1E1] hover:bg-[#F9F9F9] text-[#000000] font-[500] block transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ),
-            )}
-
-            <div className="flex items-center justify-around py-6 bg-[#F9F9F9]">
-              <button
-                className="flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000] transition-colors"
-                onClick={() => {
-                  dispatch({ type: "SET_PANEL", payload: "wishlist" });
-                  setIsMobileMenuOpen(false);
+        {mobileOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: "64px",
+              left: 0,
+              right: 0,
+              background: "#FFFFFF",
+              borderBottom: "1px solid #E1E1E1",
+              zIndex: 9998,
+              padding: "16px 0",
+            }}
+          >
+            {["/", "/collections", "/about", "/contact"].map((path, i) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "block",
+                  padding: "14px 24px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#000",
+                  textDecoration: "none",
+                  borderBottom: "1px solid #F5F5F5",
                 }}
               >
-                <div className="relative text-[20px] stroke-[1.5]">
-                  {state.wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
-                  {state.wishlist.length > 0 && (
-                    <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
-                      {state.wishlist.length}
-                    </span>
-                  )}
-                </div>
-                <span className="text-[10px] font-bold">WISHLIST</span>
-              </button>
-
-              <button
-                className={`flex flex-col items-center gap-2 hover:text-[#757575] text-[#000000] transition-all duration-300 ${state.cartAddedPulse ? "scale-125" : "scale-100"}`}
-                onClick={() => {
-                  dispatch({ type: "SET_PANEL", payload: "cart" });
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <div className="relative text-[20px] stroke-[1.5]">
-                  {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
-                  {totalItem > 0 && (
-                    <span className="absolute -top-[8px] -right-[8px] bg-[#000000] border-2 border-[#FFFFFF] rounded-full w-[18px] h-[18px] text-[#FFFFFF] flex justify-center items-center text-[10px] font-[600] font-inter tracking-normal">
-                      {totalItem}
-                    </span>
-                  )}
-                </div>
-                <span className="text-[10px] font-bold">CART</span>
-              </button>
-            </div>
+                {["SHOP", "COLLECTIONS", "ABOUT", "CONTACT"][i]}
+              </Link>
+            ))}
           </div>
         )}
       </header>

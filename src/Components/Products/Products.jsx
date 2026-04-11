@@ -24,11 +24,7 @@ const Products = () => {
   const [isFatalError, setIsFatalError] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 99999 });
-  const [draftPriceRange, setDraftPriceRange] = useState({
-    min: 0,
-    max: 99999,
-  });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 500 });
   const [addedItems, setAddedItems] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -143,8 +139,7 @@ const Products = () => {
   const clearFilters = () => {
     setActiveCategory("all");
     setSortBy("default");
-    setPriceRange({ min: 0, max: 99999 });
-    setDraftPriceRange({ min: 0, max: 99999 });
+    setPriceRange({ min: 0, max: 500 });
     dispatch({ type: "SET_SEARCH_QUERY", payload: "" });
   };
 
@@ -191,14 +186,7 @@ const Products = () => {
         setActiveCategory={setActiveCategory}
         sortBy={sortBy}
         setSortBy={setSortBy}
-        draftPriceRange={draftPriceRange}
-        setDraftPriceRange={setDraftPriceRange}
-        applyPriceRange={() => {
-          const min = Math.max(0, Number(draftPriceRange.min) || 0);
-          const max = Math.max(min, Number(draftPriceRange.max) || 0);
-          setPriceRange({ min, max });
-          setDraftPriceRange({ min, max });
-        }}
+        onPriceChange={setPriceRange}
       />
 
       {!loading && (
