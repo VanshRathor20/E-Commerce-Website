@@ -13,6 +13,7 @@ import Home from "./pages/Home/Home";
 import Collections from "./pages/Collections/Collections";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
+import FAQ from "./pages/FAQ/FAQ";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 import { useStore } from "./context/StoreContext";
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/collections" element={<Collections />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </main>
