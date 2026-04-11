@@ -8,6 +8,7 @@ import SaleStickyBar from "../SaleStickyBar/SaleStickyBar";
 import { HiArrowUp } from "react-icons/hi";
 import OrderSummary from "../OrderSummary/OrderSummary";
 import OrderPlace from "../OrderPlace/OrderPlace";
+import Footer from "../Footer/Footer";
 
 const Home = () => {
   // safe JSON parse helper: returns `fallback` when value is null/invalid
@@ -142,7 +143,7 @@ const Home = () => {
 
 
   return (
-    <div>
+    <div className="font-primarylw flex flex-col min-h-screen">
       {/* Navbar */}
       <Navbar
         handleScrollToProducts={handleScrollToProducts}
@@ -159,12 +160,14 @@ const Home = () => {
       <Banner />
 
       {/* Product */}
-      <Products
-        searchQuery={searchQuery}
-        AddToCart={AddToCart}
-        addToWishlist={addToWishlist}
-        wishlist={wishlist}
-      />
+      <div className="flex-1 w-full bg-fashion-white">
+        <Products
+          searchQuery={searchQuery}
+          AddToCart={AddToCart}
+          addToWishlist={addToWishlist}
+          wishlist={wishlist}
+        />
+      </div>
 
       {/* Cart tab */}
       <Cart
@@ -213,10 +216,13 @@ const Home = () => {
       )}
       {/* Order Placement (payment) - shown after clicking Place Order */}
 
+      {/* Main Footer Component */}
+      <Footer />
+
       {/* Back to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-500 transform ${
+        className={`fixed bottom-6 right-6 z-40 bg-fashion-black hover:bg-[#575757] text-fashion-white p-3 rounded-none shadow-lg transition-all duration-500 transform ${
           showBackToTop
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-4 scale-95 pointer-events-none"

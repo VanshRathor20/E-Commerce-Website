@@ -1,5 +1,33 @@
 @import "tailwindcss";
+@config "./tailwind.config.js";
 
-.scroll::-webkit-scrollbar{
-    display: none;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+html, body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-fashion-white, #FFFFFF);
+  color: var(--color-fashion-grey, #757575);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
 }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import logo from "../../assets/logo.png";
 import { IoSearchSharp } from "react-icons/io5";
-import { GoHeartFill } from "react-icons/go";
-import { HiShoppingBag } from "react-icons/hi2";
+import { GoHeartFill, GoHeart } from "react-icons/go";
+import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { HiMenu, HiX } from "react-icons/hi";
 
 const Navbar = ({
@@ -14,11 +13,12 @@ const Navbar = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 10);
+      setIsScrolled(scrollTop > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -26,149 +26,174 @@ const Navbar = ({
   }, []);
 
   return (
-    <div>
-      <div>
-        <header
-          className={`bg-white top-0 fixed left-0 right-0 z-50 transition-shadow duration-300 ${
-            isScrolled ? "shadow-md" : "shadow-none"
-          }`}
-        >
-          <nav className="h-auto py-3 sm:py-4 flex items-center justify-between w-full px-4 sm:px-6 lg:px-12">
-            {/* Logo */}
-            <a
-              href="#"
-              className="flex flex-wrap w-10 h-10 sm:w-12 sm:h-12 lg:w-15 lg:h-15 pointer-cursor"
-            >
-              <img
-                src={logo}
-                alt="logo"
-                className="w-full h-full object-contain"
-              />
-            </a>
+    <>
+      <header
+        className={`bg-white sticky top-0 left-0 right-0 z-[1000] transition-shadow duration-300 ${
+          isScrolled ? "shadow-sm border-b border-fashion-border" : "border-b border-fashion-border"
+        }`}
+      >
+        <nav className="h-[80px] flex items-center justify-between w-full max-w-7xl mx-auto px-5 lg:px-10">
+          
+          {/* Logo (Text instead of Image) */}
+          <a
+            href="#"
+            className="text-fashion-black font-bold uppercase text-2xl tracking-widest cursor-pointer whitespace-nowrap"
+            onClick={(e) => { e.preventDefault(); window.scrollTo(0,0); }}
+          >
+            FASHION STORE
+          </a>
 
-            {/* Desktop Nav Actions */}
-            <div className="hidden lg:flex justify-center gap-x-5 items-center">
-              {/* Search bar */}
-              <div className="p-1 rounded-full border-2 border-blue-600 flex items-center justify-center">
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  autoComplete="off"
-                  placeholder="Search"
-                  onFocus={handleScrollToProducts}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
+          {/* Center Links (Desktop only) */}
+          <div className="hidden lg:flex items-center gap-x-8">
+             {["Shop", "Collections", "About", "Contact"].map((link) => (
+                <a 
+                  key={link} 
+                  href="#" 
+                  className="text-[13px] uppercase tracking-[0.1em] text-fashion-black hover:text-fashion-grey transition-colors relative group"
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    if(link === "Shop") handleScrollToProducts(); 
                   }}
-                  className="h-[5vh] flex-1 focus:outline-none p-3 rounded-full"
-                />
+                >
+                  {link}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-fashion-grey transition-all duration-300 group-hover:w-full"></span>
+                </a>
+             ))}
+          </div>
 
-                <button className="w-10 h-10 rounded-full bg-blue-600 text-white text-xl flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
-                  <IoSearchSharp />
-                </button>
-              </div>
-
-              {/* Icons */}
-              <button className="flex text-2xl text-zinc-800 cursor-pointer">
-                {/* heart icon */}
-                <GoHeartFill onClick={() => handlePanel("wishlist")} />
-                {wishlist.length > 0 && (
-                  <span
-                    className="bg-red-600 rounded-full w-5 h-5 text-white flex justify-center items-center text-sm font-bold border-white border-2 ml-[-7px]"
-                    onClick={() => handlePanel("wishlist")}
-                  >
-                    {wishlist.length}
-                  </span>
-                )}
-
-                {/* shopping bag icon */}
-                <HiShoppingBag onClick={() => handlePanel("cart")} />
-                {totalItem > 0 && (
-                  <span
-                    className="bg-red-600 rounded-full w-5 h-5 text-white font-bold flex justify-center items-center text-sm border-white border-2 ml-[-7px]"
-                    onClick={() => handlePanel("cart")}
-                  >
-                    {totalItem}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Mobile Menu Button & Icons */}
-            <div className="flex items-center gap-x-3 lg:hidden">
-              {/* Mobile Icons */}
-              <div className="flex items-center gap-x-2">
-                <GoHeartFill
-                  className="text-xl text-zinc-800 cursor-pointer"
-                  onClick={() => handlePanel("wishlist")}
-                />
-                <HiShoppingBag
-                  className="text-xl text-zinc-800 cursor-pointer"
-                  onClick={() => handlePanel("cart")}
-                />
-              </div>
-
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-2xl text-zinc-800 cursor-pointer"
-              >
-                {isMobileMenuOpen ? <HiX /> : <HiMenu />}
-              </button>
-            </div>
-          </nav>
-
-          {/* Mobile Menu */}
-          {isMobileMenuOpen && (
-            <div className="lg:hidden bg-white border-t border-gray-200 px-4 py-4">
-              {/* Mobile Search */}
-              <div className="mb-4">
-                <div className="p-1 rounded-full border-2 border-blue-600 flex items-center justify-center">
+          {/* Desktop Nav Actions */}
+          <div className="hidden lg:flex justify-end gap-x-6 items-center flex-1">
+            {/* Search Icon / Bar */}
+            <div className="flex items-center">
+              {isSearchOpen ? (
+                <div className="flex items-center border-b border-fashion-border pb-1 animate-fade-in">
                   <input
                     type="text"
-                    name="search-mobile"
-                    id="search-mobile"
                     autoComplete="off"
-                    placeholder="Search"
-                    onFocus={handleScrollToProducts}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                    }}
-                    className="h-10 flex-1 focus:outline-none p-3 rounded-full"
+                    placeholder="SEARCH"
+                    autoFocus
+                    onBlur={() => { setTimeout(() => setIsSearchOpen(false), 200) }}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-40 text-[13px] focus:outline-none uppercase tracking-widest placeholder:text-fashion-grey text-fashion-black bg-transparent"
                   />
-
-                  <button className="w-8 h-8 rounded-full bg-blue-600 text-white text-lg flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
-                    <IoSearchSharp />
-                  </button>
+                  <IoSearchSharp className="text-xl text-fashion-black cursor-pointer" />
                 </div>
-              </div>
-
-              {/* Mobile Menu Items */}
-              <div className="flex flex-col space-y-3">
-                <button
-                  className="text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors"
-                  onClick={() => {
-                    handlePanel("wishlist");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  Wishlist
-                </button>
-                <button
-                  className="text-left py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors"
-                  onClick={() => {
-                    handlePanel("cart");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  Cart
-                </button>
-              </div>
+              ) : (
+                <IoSearchSharp 
+                  className="text-[22px] text-fashion-black cursor-pointer hover:text-fashion-grey transition-colors" 
+                  onClick={() => setIsSearchOpen(true)}
+                />
+              )}
             </div>
-          )}
-        </header>
-      </div>
-    </div>
+
+            {/* Heart Icon */}
+            <button 
+              className="relative text-[22px] text-fashion-black cursor-pointer hover:text-fashion-grey transition-colors flex items-center"
+              onClick={() => handlePanel("wishlist")}
+            >
+              {wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
+              {wishlist.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-fashion-black rounded-full w-4 h-4 text-fashion-white flex justify-center items-center text-[10px] font-bold">
+                  {wishlist.length}
+                </span>
+              )}
+            </button>
+
+            {/* Shopping Bag Icon */}
+            <button 
+              className="relative text-[22px] text-fashion-black cursor-pointer hover:text-fashion-grey transition-colors flex items-center"
+              onClick={() => handlePanel("cart")}
+            >
+              {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
+              {totalItem > 0 && (
+                <span className="absolute -top-2 -right-2 bg-fashion-black rounded-full w-4 h-4 text-fashion-white flex justify-center items-center text-[10px] font-bold">
+                  {totalItem}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Button & Icons */}
+          <div className="flex items-center gap-x-5 lg:hidden">
+            <IoSearchSharp 
+              className="text-2xl text-fashion-black cursor-pointer" 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            />
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-2xl text-fashion-black cursor-pointer"
+            >
+              {isMobileMenuOpen ? <HiX /> : <HiMenu />}
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Search Dropdown */}
+        {isSearchOpen && (
+          <div className="lg:hidden w-full bg-white px-5 py-4 border-t border-fashion-border">
+             <div className="flex items-center border border-fashion-border p-2">
+                <input
+                  type="text"
+                  placeholder="SEARCH PRODUCTS..."
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 focus:outline-none text-[13px] tracking-widest uppercase bg-transparent p-1"
+                />
+             </div>
+          </div>
+        )}
+
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden w-full bg-white border-t border-fashion-border flex flex-col uppercase tracking-widest text-[13px]">
+             {["Shop", "Collections", "About", "Contact"].map((link) => (
+                <button 
+                  key={link}
+                  className="w-full text-left py-4 px-5 border-b border-fashion-border hover:bg-gray-50 text-fashion-black"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if(link === "Shop") handleScrollToProducts();
+                  }}
+                >
+                  {link}
+                </button>
+             ))}
+             
+             <div className="flex items-center justify-around py-5">
+               <button 
+                  className="flex flex-col items-center gap-2 hover:text-fashion-grey"
+                  onClick={() => { handlePanel("wishlist"); setIsMobileMenuOpen(false); }}
+               >
+                  <div className="relative text-2xl">
+                     {wishlist.length > 0 ? <GoHeartFill /> : <GoHeart />}
+                     {wishlist.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-fashion-black rounded-full w-4 h-4 text-fashion-white flex justify-center items-center text-[10px] font-bold">
+                          {wishlist.length}
+                        </span>
+                     )}
+                  </div>
+                  <span className="text-[10px]">WISHLIST</span>
+               </button>
+
+               <button 
+                  className="flex flex-col items-center gap-2 hover:text-fashion-grey"
+                  onClick={() => { handlePanel("cart"); setIsMobileMenuOpen(false); }}
+               >
+                  <div className="relative text-2xl">
+                     {totalItem > 0 ? <HiShoppingBag /> : <HiOutlineShoppingBag />}
+                     {totalItem > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-fashion-black rounded-full w-4 h-4 text-fashion-white flex justify-center items-center text-[10px] font-bold">
+                          {totalItem}
+                        </span>
+                     )}
+                  </div>
+                  <span className="text-[10px]">CART</span>
+               </button>
+             </div>
+          </div>
+        )}
+      </header>
+    </>
   );
 };
 
