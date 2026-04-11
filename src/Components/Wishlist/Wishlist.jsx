@@ -14,14 +14,14 @@ const Wishlist = ({
       {/* Backdrop overlay */}
       {activePanel === "wishlist" && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+          className="fixed inset-0 bg-black/50 z-[9998] transition-opacity"
           onClick={closePanel}
         ></div>
       )}
 
       {/* Side Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[420px] bg-fashion-white border-l border-fashion-border flex flex-col transition-transform duration-350 ease-in-out ${
+        className={`fixed top-0 right-0 bottom-0 z-[9999] h-[100vh] w-full sm:w-[420px] bg-white border-l border-fashion-border flex flex-col transition-transform duration-350 ease-in-out overflow-y-auto ${
           activePanel === "wishlist" ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -55,22 +55,22 @@ const Wishlist = ({
               >
                 {/* Wishlist Image */}
                 <div className="w-[72px] h-[72px] border border-fashion-border flex-shrink-0 bg-[#F5F5F5] flex items-center justify-center relative overflow-hidden">
-                  {item.image ? (
+                  {item.thumbnail || item.image ? (
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.thumbnail || item.image}
+                      alt={item.title || item.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "block";
+                        e.target.nextSibling.style.display = "flex";
                       }}
                     />
                   ) : null}
                   <div
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{ display: item.image ? "none" : "flex" }}
+                    className="absolute inset-0 bg-[#F5F5F5] items-center justify-center"
+                    style={{ display: (item.thumbnail || item.image) ? "none" : "flex" }}
                   >
-                    <HiOutlineHeart className="text-gray-300 text-2xl" />
+                    <HiOutlineHeart className="text-gray-400 text-2xl" />
                   </div>
                 </div>
 
@@ -78,7 +78,7 @@ const Wishlist = ({
                 <div className="flex-1 flex flex-col gap-1">
                   <div className="flex justify-between items-start">
                     <h4 className="font-bold text-fashion-black text-[13px] uppercase tracking-widest leading-tight">
-                      {item.name}
+                      {item.title || item.name}
                     </h4>
                     <button
                       className="text-fashion-black hover:text-fashion-grey transition-colors cursor-pointer text-[16px] ml-4"

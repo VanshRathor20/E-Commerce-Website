@@ -133,7 +133,7 @@ const Products = ({
              <button
                 onClick={() => addToWishlist && addToWishlist(i)}
                 className={`absolute top-3 right-3 text-xl z-10 transition-colors ${
-                  isInWishlist(i) ? "text-red-500" : "text-fashion-grey hover:text-fashion-black"
+                  isInWishlist(i) ? "text-fashion-black" : "text-fashion-grey hover:text-fashion-black"
                 }`}
              >
                 {isInWishlist(i) ? <GoHeartFill /> : <GoHeart />}
