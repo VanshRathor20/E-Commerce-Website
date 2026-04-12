@@ -22,9 +22,24 @@ const ProductDetail = () => {
     setLoading(true);
     setError(null);
 
-    const dummyId = String(id).replace("dummyjson-", "");
+    const productId = String(id || "");
+    const isDummyJson = productId.startsWith("dummyjson-");
+    const isFakeStore = productId.startsWith("fakestore-");
+    const normalizedId = productId
+      .replace("dummyjson-", "")
+      .replace("fakestore-", "");
 
-    fetch(`https://dummyjson.com/products/${dummyId}`)
+    const primaryUrl = isDummyJson
+      ? `https://dummyjson.com/products/${normalizedId}`
+      : isFakeStore
+        ? `https://fakestoreapi.com/products/${normalizedId}`
+        : null;
+
+    const primaryRequest = primaryUrl
+      ? fetch(primaryUrl)
+      : Promise.reject(new Error("unsupported-primary-source"));
+
+    primaryRequest
       .then((response) => {
         if (!response.ok) {
           throw new Error("primary-fetch-failed");
@@ -32,10 +47,21 @@ const ProductDetail = () => {
         return response.json();
       })
       .then((data) => {
+        const normalized = isDummyJson
+          ? {
+              ...data,
+              id: `dummyjson-${data.id}`,
+              image: data.thumbnail,
+            }
+          : {
+              ...data,
+              id: `fakestore-${data.id}`,
+              image: data.image,
+              images: [data.image],
+              rating: Number(data.rating?.rate) || 0,
+            };
         setProduct({
-          ...data,
-          id: `dummyjson-${data.id}`,
-          image: data.thumbnail,
+          ...normalized,
         });
         setActiveImage(0);
         setLoading(false);

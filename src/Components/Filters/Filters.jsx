@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const tabs = ["all", "beauty", "grooming"];
+const tabs = ["all", "mens", "womens", "accessories"];
 
 const Filters = ({
   activeCategory,

@@ -5,25 +5,25 @@ const Collections = () => {
   const navigate = useNavigate();
   const collections = [
     {
-      title: "BEAUTY",
-      subtitle: "Makeup & Skincare",
+      title: "MEN'S WEAR",
+      subtitle: "Shirts, Jackets & More",
       image:
-        "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
-      category: "beauty",
+        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=800&auto=format&fit=crop",
+      category: "mens",
     },
     {
-      title: "GROOMING",
-      subtitle: "Skincare & Wellness",
+      title: "WOMEN'S WEAR",
+      subtitle: "Dresses, Tops & Style",
       image:
-        "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800",
-      category: "grooming",
+        "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop",
+      category: "womens",
     },
     {
-      title: "FRAGRANCE",
-      subtitle: "Perfumes & Scents",
+      title: "ACCESSORIES",
+      subtitle: "Bags, Jewelry & More",
       image:
-        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800&auto=format&fit=crop",
-      category: "fragrance",
+        "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=800&auto=format&fit=crop",
+      category: "accessories",
     },
   ];
 

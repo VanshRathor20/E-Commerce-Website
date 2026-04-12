@@ -53,7 +53,13 @@ const Products = () => {
     const query = new URLSearchParams(location.search);
     const category = query.get("category");
     if (category) {
-      setActiveCategory(String(category).toLowerCase());
+      const parsed = String(category).toLowerCase();
+      const legacyCategoryMap = {
+        beauty: "womens",
+        grooming: "mens",
+        fragrance: "accessories",
+      };
+      setActiveCategory(legacyCategoryMap[parsed] || parsed);
     }
   }, [location.search]);
 
@@ -80,10 +86,6 @@ const Products = () => {
     if (productCat === filterCat) return true;
     if (productCat.includes(filterCat)) return true;
     if (filterCat.includes(productCat)) return true;
-
-    if (filterCat === "fragrance" && productCat.includes("grooming")) {
-      return true;
-    }
 
     return false;
   };
