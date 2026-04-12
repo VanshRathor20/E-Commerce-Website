@@ -55,9 +55,9 @@ const Products = () => {
     if (category) {
       const parsed = String(category).toLowerCase();
       const legacyCategoryMap = {
-        beauty: "womens",
-        grooming: "mens",
-        fragrance: "accessories",
+        beauty: "beauty",
+        grooming: "beauty",
+        fragrance: "beauty",
       };
       setActiveCategory(legacyCategoryMap[parsed] || parsed);
     }
@@ -83,11 +83,7 @@ const Products = () => {
       .trim();
 
     if (filterCat === "all") return true;
-    if (productCat === filterCat) return true;
-    if (productCat.includes(filterCat)) return true;
-    if (filterCat.includes(productCat)) return true;
-
-    return false;
+    return productCat === filterCat;
   };
 
   const filteredProducts = useMemo(() => {

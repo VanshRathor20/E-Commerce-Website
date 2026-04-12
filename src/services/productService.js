@@ -4,12 +4,39 @@ const FALLBACK_IMAGE =
 const DUMMYJSON_MENS_SHIRTS_URL =
   import.meta.env.VITE_DUMMYJSON_MENS_SHIRTS_URL ||
   "https://dummyjson.com/products/category/mens-shirts";
+const DUMMYJSON_MENS_SHOES_URL =
+  import.meta.env.VITE_DUMMYJSON_MENS_SHOES_URL ||
+  "https://dummyjson.com/products/category/mens-shoes";
 const DUMMYJSON_WOMENS_DRESSES_URL =
   import.meta.env.VITE_DUMMYJSON_WOMENS_DRESSES_URL ||
   "https://dummyjson.com/products/category/womens-dresses";
+const DUMMYJSON_WOMENS_SHOES_URL =
+  import.meta.env.VITE_DUMMYJSON_WOMENS_SHOES_URL ||
+  "https://dummyjson.com/products/category/womens-shoes";
 const DUMMYJSON_WOMENS_BAGS_URL =
   import.meta.env.VITE_DUMMYJSON_WOMENS_BAGS_URL ||
   "https://dummyjson.com/products/category/womens-bags";
+const DUMMYJSON_WOMENS_JEWELLERY_URL =
+  import.meta.env.VITE_DUMMYJSON_WOMENS_JEWELLERY_URL ||
+  "https://dummyjson.com/products/category/womens-jewellery";
+const DUMMYJSON_SUNGLASSES_URL =
+  import.meta.env.VITE_DUMMYJSON_SUNGLASSES_URL ||
+  "https://dummyjson.com/products/category/sunglasses";
+const DUMMYJSON_MENS_WATCHES_URL =
+  import.meta.env.VITE_DUMMYJSON_MENS_WATCHES_URL ||
+  "https://dummyjson.com/products/category/mens-watches";
+const DUMMYJSON_WOMENS_WATCHES_URL =
+  import.meta.env.VITE_DUMMYJSON_WOMENS_WATCHES_URL ||
+  "https://dummyjson.com/products/category/womens-watches";
+const DUMMYJSON_TOPS_URL =
+  import.meta.env.VITE_DUMMYJSON_TOPS_URL ||
+  "https://dummyjson.com/products/category/tops";
+const DUMMYJSON_BEAUTY_URL =
+  import.meta.env.VITE_DUMMYJSON_BEAUTY_URL ||
+  "https://dummyjson.com/products/category/beauty";
+const DUMMYJSON_FRAGRANCES_URL =
+  import.meta.env.VITE_DUMMYJSON_FRAGRANCES_URL ||
+  "https://dummyjson.com/products/category/fragrances";
 const FAKESTORE_MEN_URL =
   import.meta.env.VITE_FAKESTORE_MEN_URL ||
   "https://fakestoreapi.com/products/category/men's clothing";
@@ -25,20 +52,35 @@ const ESCUELAJS_URL =
 
 void ESCUELAJS_URL;
 
-const normalizeCategory = (rawCategory) => {
+const normalizeCategory = (rawCategory, fallbackText = "") => {
   const category = String(rawCategory || "").toLowerCase();
-  if (category.includes("men")) return "mens";
-  if (category.includes("women")) return "womens";
+  const text = `${category} ${String(fallbackText || "").toLowerCase()}`;
+
   if (
-    category.includes("jewel") ||
-    category.includes("bag") ||
-    category.includes("watch") ||
-    category.includes("sunglass") ||
-    category.includes("accessor")
+    text.includes("bag") ||
+    text.includes("jewel") ||
+    text.includes("watch") ||
+    text.includes("sunglass") ||
+    text.includes("accessor")
   ) {
     return "accessories";
   }
-  return "fashion";
+
+  if (
+    text.includes("beauty") ||
+    text.includes("lipstick") ||
+    text.includes("makeup") ||
+    text.includes("cosmetic") ||
+    text.includes("fragrance") ||
+    text.includes("skin")
+  ) {
+    return "beauty";
+  }
+
+  if (/\bwomen\b|\bwomens\b|\bwoman\b/.test(text)) return "womens";
+  if (/\bmen\b|\bmens\b|\bman\b/.test(text)) return "mens";
+
+  return "accessories";
 };
 
 const normalizeDummyJson = (p) => ({
@@ -50,7 +92,7 @@ const normalizeDummyJson = (p) => ({
     Array.isArray(p.images) && p.images.length > 0
       ? p.images
       : [p.thumbnail || FALLBACK_IMAGE],
-  category: normalizeCategory(p.category),
+  category: normalizeCategory(p.category, p.title),
   source: "dummyjson",
   discountPercentage: p.discountPercentage,
   rating: p.rating,
@@ -65,7 +107,7 @@ const normalizeFakeStore = (p) => ({
   price: Number(p.price),
   image: p.image || FALLBACK_IMAGE,
   images: [p.image || FALLBACK_IMAGE],
-  category: normalizeCategory(p.category),
+  category: normalizeCategory(p.category, p.title),
   source: "fakestore",
   rating: Number(p.rating?.rate) || 0,
   description: p.description,
@@ -76,14 +118,14 @@ const hasValidImage = (image) =>
   /^https?:\/\//i.test(image.trim()) &&
   image.trim().length > 10;
 
-const isFashionProduct = (product) => {
-  const haystack = `${product.title || ""} ${product.description || ""} ${
+const isBlockedProduct = (product) => {
+  const text = `${product.title || ""} ${product.description || ""} ${
     product.category || ""
   }`
     .toLowerCase()
     .trim();
 
-  const blocked = [
+  const blockedWords = [
     "vegetable",
     "grocer",
     "food",
@@ -91,28 +133,8 @@ const isFashionProduct = (product) => {
     "kitchen",
     "beverage",
   ];
-  if (blocked.some((word) => haystack.includes(word))) {
-    return false;
-  }
 
-  const allowed = [
-    "shirt",
-    "dress",
-    "jean",
-    "jacket",
-    "hoodie",
-    "shoe",
-    "sneaker",
-    "bag",
-    "watch",
-    "jewel",
-    "fashion",
-    "clothing",
-    "mens",
-    "women",
-    "accessor",
-  ];
-  return allowed.some((word) => haystack.includes(word));
+  return blockedWords.some((word) => text.includes(word));
 };
 
 const titleKey = (title) =>
@@ -136,6 +158,17 @@ export const fetchUnifiedProducts = async () => {
       },
     },
     {
+      apiName: "dummyjson-mens-shoes",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_MENS_SHOES_URL);
+        if (!res.ok) throw new Error(`DummyJSON mens-shoes ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
       apiName: "dummyjson-womens-dresses",
       run: async () => {
         const res = await fetch(DUMMYJSON_WOMENS_DRESSES_URL);
@@ -149,10 +182,104 @@ export const fetchUnifiedProducts = async () => {
       },
     },
     {
+      apiName: "dummyjson-womens-shoes",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_WOMENS_SHOES_URL);
+        if (!res.ok) {
+          throw new Error(`DummyJSON womens-shoes ${res.status}`);
+        }
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
       apiName: "dummyjson-womens-bags",
       run: async () => {
         const res = await fetch(DUMMYJSON_WOMENS_BAGS_URL);
         if (!res.ok) throw new Error(`DummyJSON womens-bags ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-womens-jewellery",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_WOMENS_JEWELLERY_URL);
+        if (!res.ok) {
+          throw new Error(`DummyJSON womens-jewellery ${res.status}`);
+        }
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-sunglasses",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_SUNGLASSES_URL);
+        if (!res.ok) throw new Error(`DummyJSON sunglasses ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-mens-watches",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_MENS_WATCHES_URL);
+        if (!res.ok) throw new Error(`DummyJSON mens-watches ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-womens-watches",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_WOMENS_WATCHES_URL);
+        if (!res.ok) {
+          throw new Error(`DummyJSON womens-watches ${res.status}`);
+        }
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-tops",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_TOPS_URL);
+        if (!res.ok) throw new Error(`DummyJSON tops ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-beauty",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_BEAUTY_URL);
+        if (!res.ok) throw new Error(`DummyJSON beauty ${res.status}`);
+        const data = await res.json();
+        return (Array.isArray(data.products) ? data.products : []).map(
+          normalizeDummyJson,
+        );
+      },
+    },
+    {
+      apiName: "dummyjson-fragrances",
+      run: async () => {
+        const res = await fetch(DUMMYJSON_FRAGRANCES_URL);
+        if (!res.ok) throw new Error(`DummyJSON fragrances ${res.status}`);
         const data = await res.json();
         return (Array.isArray(data.products) ? data.products : []).map(
           normalizeDummyJson,
@@ -211,7 +338,7 @@ export const fetchUnifiedProducts = async () => {
     .filter((p) => Boolean(p.title))
     .filter((p) => hasValidImage(p.image))
     .filter((p) => Number(p.price) > 0)
-    .filter((p) => isFashionProduct(p))
+    .filter((p) => !isBlockedProduct(p))
     .filter((p) => {
       const key = titleKey(p.title);
       if (!key || dedupe.has(key)) {
