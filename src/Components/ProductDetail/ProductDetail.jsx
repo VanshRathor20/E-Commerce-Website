@@ -172,9 +172,30 @@ const ProductDetail = () => {
     image: product.image,
   };
   const isInWishlist = state.wishlist.some((p) => p.id === product.id);
-  const oldPrice = product.discountPercentage
-    ? product.price / (1 - product.discountPercentage / 100)
-    : product.price;
+  const productPrice = Number(product.price) || 0;
+  const discountPercentage = Number(product.discountPercentage) || 0;
+  const explicitOriginal = Number(product.originalPrice ?? product.oldPrice);
+  const normalizedExplicitOriginal =
+    Number.isFinite(explicitOriginal) && explicitOriginal > productPrice
+      ? explicitOriginal
+      : null;
+  const inferredOriginal =
+    discountPercentage > 0 && discountPercentage < 100
+      ? productPrice / (1 - discountPercentage / 100)
+      : null;
+  const oldPrice =
+    normalizedExplicitOriginal ||
+    (inferredOriginal && inferredOriginal > productPrice
+      ? inferredOriginal
+      : null);
+  const hasDiscount =
+    discountPercentage > 0 || Boolean(oldPrice && oldPrice > productPrice);
+  const displayDiscount =
+    discountPercentage > 0
+      ? Math.round(discountPercentage)
+      : oldPrice && oldPrice > productPrice
+        ? Math.round(((oldPrice - productPrice) / oldPrice) * 100)
+        : 0;
   const images =
     product.images?.length > 0
       ? (() => {
@@ -286,15 +307,15 @@ const ProductDetail = () => {
 
           <div className="flex items-end gap-4 mb-8">
             <span className="text-[var(--text-primary)] font-bold text-[28px] leading-none">
-              ₹{product.price.toFixed(2)}
+              ₹{productPrice.toFixed(2)}
             </span>
-            {product.discountPercentage > 0 && (
+            {hasDiscount && oldPrice && (
               <div className="flex items-center gap-3 mb-1">
                 <span className="text-[var(--text-secondary)] text-[16px] line-through">
                   ₹{oldPrice.toFixed(2)}
                 </span>
                 <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] text-[10px] uppercase font-bold tracking-[0.1em] px-[8px] py-[4px] rounded-none">
-                  SAVE {Math.round(product.discountPercentage)}%
+                  SAVE {displayDiscount}%
                 </span>
               </div>
             )}

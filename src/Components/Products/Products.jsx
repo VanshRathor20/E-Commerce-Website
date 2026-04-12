@@ -9,10 +9,43 @@ import SkeletonCard from "../SkeletonCard/SkeletonCard";
 import { useToast } from "../Toast/ToastContext";
 
 const PAGE_SIZE = 20;
+const MIN_SALE_PERCENT = 12;
 
 const extractSortId = (id) => {
   const matched = String(id).match(/(\d+)$/);
   return matched ? Number(matched[1]) : 0;
+};
+
+const getSaleMeta = (product) => {
+  const price = Number(product?.price) || 0;
+  const discountPercentage = Number(product?.discountPercentage) || 0;
+  const explicitOriginal = Number(product?.originalPrice ?? product?.oldPrice);
+  const normalizedExplicitOriginal =
+    Number.isFinite(explicitOriginal) && explicitOriginal > price
+      ? explicitOriginal
+      : null;
+
+  const inferredOriginal =
+    discountPercentage > 0 && discountPercentage < 100
+      ? price / (1 - discountPercentage / 100)
+      : null;
+
+  const originalPrice =
+    normalizedExplicitOriginal && normalizedExplicitOriginal > price
+      ? normalizedExplicitOriginal
+      : inferredOriginal && inferredOriginal > price
+        ? inferredOriginal
+        : null;
+
+  const hasDiscount =
+    Boolean(normalizedExplicitOriginal && normalizedExplicitOriginal > price) ||
+    (discountPercentage >= MIN_SALE_PERCENT && Boolean(originalPrice));
+
+  return {
+    hasDiscount,
+    price,
+    originalPrice: hasDiscount ? originalPrice : null,
+  };
 };
 
 const Products = () => {
@@ -236,10 +269,8 @@ const Products = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {pageProducts.map((product) => {
               const wishlistActive = inWishlist(product.id);
-              const hasDiscount = Number(product.discountPercentage) > 0;
-              const originalPrice = hasDiscount
-                ? product.price / (1 - product.discountPercentage / 100)
-                : null;
+              const saleMeta = getSaleMeta(product);
+              const { hasDiscount, price } = saleMeta;
               const stars = Math.min(
                 5,
                 Math.max(0, Math.round(Number(product.rating) || 0)),
@@ -261,16 +292,13 @@ const Products = () => {
                         e.currentTarget.style.display = "none";
                       }}
                     />
-                    <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
-                        {product.category}
-                      </span>
-                      {hasDiscount && (
+                    {hasDiscount && (
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
                         <span className="bg-[var(--btn-bg)] text-[var(--btn-text)] px-2 py-1 text-[10px] uppercase tracking-[0.1em] font-bold">
                           SALE
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
 
                     <button
                       onClick={(event) => toggleWishlist(event, product)}
@@ -339,13 +367,8 @@ const Products = () => {
                     </div>
 
                     <div className="mt-auto pt-3 flex items-center gap-3">
-                      {hasDiscount && (
-                        <span className="text-[12px] text-[var(--text-secondary)] line-through">
-                          ₹{originalPrice.toFixed(2)}
-                        </span>
-                      )}
                       <span className="text-[15px] text-[var(--text-primary)] font-bold">
-                        ₹{Number(product.price).toFixed(2)}
+                        ₹{price.toFixed(2)}
                       </span>
                     </div>
                   </div>
