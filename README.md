@@ -1,46 +1,97 @@
-# 🛒 E-Mart — E-Commerce Website
+# 🛍️ Fashion Store (E-Commerce Frontend)
 
-Welcome to **E-Mart**, a fully responsive **E-Commerce Website** built with modern web technologies.  
-This project showcases a complete online shopping interface with product listings, cart functionality, and intuitive design — perfect for learning and portfolio use.
-
----
-
-### 🌐 Live Demo
-🔗 Live URL: https://e-mart-website.netlify.app
+🚀 Live Demo: https://e-mart-website.netlify.app/
 
 ---
 
-## 🚀 Features
+## 📌 Overview
 
-- Homepage with product cards
-- Add to cart functionality
+Fashion Store is a modern e-commerce frontend application built using React.  
+This project focuses on clean UI, responsive design, and real-world e-commerce features.
+
+---
+
+## ✨ Features
+
+### 🔍 Product Features
+- Live product data using API integration
+- Product search functionality
+- Category-based filtering
+- Clean and minimal product card UI
+
+---
+
+### 🛒 Cart Functionality
+- Add to cart
 - Quantity increment/decrement
-- Product filtering/search (if implemented)
-- Mobile-friendly responsive layout
-- Styled using modern CSS
+- Real-time cart updates
 
 ---
 
-## 🛠 Technologies Used
+### 🌙 Dark Mode
+- Fully functional dark theme
+- Smooth toggle experience
+- Consistent UI across pages
 
-| Technology |        Purpose         |
-|------------|------------------------|
-| React      |      UI library        |
-| JavaScript | Logic & interactivity  |
-| HTML5      |     Page structure     |
-| CSS3       |    Styling & layout    |
-| Netlify    |       Deployment       |
+---
 
+### 📱 Responsive Design
+- Mobile-first approach
+- Fully optimized for all screen sizes
+- Improved mobile navigation
+
+---
+
+### 🔔 User Experience
+- Toast notifications for actions
+- Clean and minimal UI
+- Optimized user interaction flow
+
+---
+
+### 🏷️ Smart Tag System
+- Conditional "SALE" tag
+- No unnecessary or cluttered badges
+- Discount details shown only on product page
+
+---
+
+## ⚡ Performance Improvements
+- Optimized API handling
+- Removed duplicate products
+- Faster rendering and better state management
+
+---
+
+## 🧠 Tech Stack
+
+- React.js
+- JavaScript (ES6+)
+- Tailwind CSS (for responsive UI & styling)
+- API Integration
+  
+---
 
 ## 📂 Project Structure
+
 ```
 ├── 📁 Components
+│   ├── 📁 About
+│   │   └── 📄 About.jsx
 │   ├── 📁 AddToCartButton
 │   │   └── 📄 AddToCartButton.jsx
 │   ├── 📁 Banner
 │   │   └── 📄 Banner.jsx
 │   ├── 📁 Cart
 │   │   └── 📄 Cart.jsx
+│   ├── 📁 Collections
+│   │   └── 📄 Collections.jsx
+│   ├── 📁 Contact
+│   │   └── 📄 Contact.jsx
+│   ├── 📁 Filters
+│   │   └── 📄 Filters.jsx
+│   ├── 📁 Footer
+│   │   └── 📄 Footer.jsx
 │   ├── 📁 Home
 │   │   └── 📄 Home.jsx
 │   ├── 📁 Navbar
@@ -49,11 +100,17 @@ This project showcases a complete online shopping interface with product listing
 │   │   └── 📄 OrderPlace.jsx
 │   ├── 📁 OrderSummary
 │   │   └── 📄 OrderSummary.jsx
+│   ├── 📁 ProductDetail
+│   │   └── 📄 ProductDetail.jsx
 │   ├── 📁 Products
 │   │   ├── 📄 ProductList.js
 │   │   └── 📄 Products.jsx
 │   ├── 📁 SaleStickyBar
 │   │   └── 📄 SaleStickyBar.jsx
+│   ├── 📁 SkeletonCard
+│   │   └── 📄 SkeletonCard.jsx
+│   ├── 📁 Toast
+│   │   └── 📄 ToastContext.jsx
 │   └── 📁 Wishlist
 │       └── 📄 Wishlist.jsx
 ├── 📁 assets
@@ -74,6 +131,27 @@ This project showcases a complete online shopping interface with product listing
 │   ├── 🖼️ sleepsuit.png
 │   ├── 🖼️ sweater.png
 │   └── 🖼️ tshirt.png
+├── 📁 context
+│   ├── 📄 StoreContext.jsx
+│   └── 📄 ThemeContext.jsx
+├── 📁 pages
+│   ├── 📁 About
+│   │   └── 📄 About.jsx
+│   ├── 📁 Collections
+│   │   └── 📄 Collections.jsx
+│   ├── 📁 Contact
+│   │   └── 📄 Contact.jsx
+│   ├── 📁 FAQ
+│   │   ├── 📄 FAQ.jsx
+│   │   └── 📄 faqData.js
+│   ├── 📁 Home
+│   │   └── 📄 Home.jsx
+│   ├── 📁 NotFound
+│   │   └── 📄 NotFound.jsx
+│   └── 📁 ProductDetail
+│       └── 📄 ProductDetail.jsx
+├── 📁 services
+│   └── 📄 productService.js
 ├── 📄 App.jsx
 ├── 🎨 index.css
 └── 📄 main.jsx
@@ -81,54 +159,24 @@ This project showcases a complete online shopping interface with product listing
 
 ---
 
-## ⚙️ Getting Started — Run Locally
+## 🎯 Key Highlights
 
-Follow these steps if you want to run the project locally:
-
- 1. Clone the repo
-
-```bash
-git clone https://github.com/VanshRathor20/E-Commerce-Website.git
-```
-
-2. Install dependencies
-```bash
-cd E-Commerce-Website
-npm install
-```
-
-3. Run the development server
-```bash
-npm run dev
-```
+- Clean and modern UI design
+- Real-world e-commerce logic implementation
+- Focus on performance and user experience
+- Production-ready frontend architecture
 
 ---
 
-## 🧠 How It Works
+## 🚀 Future Improvements
 
-This project uses React to dynamically render products and manage cart state.
-The cart logic allows users to:
-
-- Add products to cart
-- Update item quantities
-- Remove items
+- Backend integration (Node.js + MongoDB)
+- User authentication
+- Payment gateway integration
 
 ---
 
-## 💡 Future Improvements
+## 👨‍💻 Author
 
-- Add routing (React Router)
-- Integrate backend API (Products, Orders)
-- Add user authentication
-- Add payment gateway
-  
----
-
-## ⭐ Feedback & Contributions
-
-- If you have suggestions or want to help improve the project
-- feel free to open an issue or submit a pull request!
-
-## 👤 Author
-- Vansh Rathor
-- E-Mart-Website
+Vansh Rathor  
+GitHub: https://github.com/VanshRathor20
